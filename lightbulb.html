@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>Display</title>
+
+	    <script src="/mqtt.js"></script>
+	    <script src="/jquery.min.js"></script>
+
+	    <link rel="stylesheet" href="/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+	    <script src="/js/bootstrap.min.js"></script>
+
+	    <style>
+	        body {
+	          font: 50pt Menlo, Monaco, Consolas, "Courier New", monospace;
+	          color: black;
+	          background-color: #e9ecef;
+	        }
+
+	        #container {
+	          position: absolute;
+	          top: 50%;
+	          left: 50%;
+	          transform: translate(-50%, -50%);
+	        }
+	    </style>
+	</head>
+
+
+	<body>
+		<img id="myImage" src="/pic_bulboff.gif" style="width:100px">
+
+	    <script>
+			// Connect to broker and subscribe to everything
+			var client = mqtt.connect();
+			client.subscribe(["lightswitch"]);
+
+			client.on("message", function(topic, message) {
+				if (topic == "lightswitch" && message == "turnon") {
+					document.getElementById('myImage').src='/pic_bulbon.gif';
+					client.publish('bulbstatus', 'On');
+				}
+				else if (topic == "lightswitch" && message == "turnoff") {
+					document.getElementById('myImage').src='/pic_bulboff.gif';
+					client.publish('bulbstatus', 'Off');
+				}
+			});
+	    </script>
+	</body>
+</html>

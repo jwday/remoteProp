@@ -76,7 +76,8 @@
 
   <script>
     // Connect to broker and subscribe to everything
-    var client = mqtt.connect();
+    var client = mqtt.Client();
+    client.connect("localhost", 3000, 60)
     client.subscribe("\#");
     var values = {}
 
@@ -86,14 +87,14 @@
         console.log(parseInt(message.toString()));
         $('#trial')[0].value = parseInt(message.toString());
       } else if (topic == "secondary") {
-	left_or_right = parseInt(message.toString());
-	if (left_or_right == 0) {
-	    $('#' + topic + '> .value').html("LEFT");
-	} else if (left_or_right == 1) {
-	    $('#' + topic + '> .value').html("RIGHT");
-	} else {
-	    $('#' + topic + '> .value').html("NaN");
-	}
+      	left_or_right = parseInt(message.toString());
+      	if (left_or_right == 0) {
+      	    $('#' + topic + '> .value').html("LEFT");
+      	} else if (left_or_right == 1) {
+      	    $('#' + topic + '> .value').html("RIGHT");
+      	} else {
+      	    $('#' + topic + '> .value').html("NaN");
+      	}
       }else {
         value = parseFloat(message.toString()).toFixed(2);
         if (value > 0) {
