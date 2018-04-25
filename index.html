@@ -20,31 +20,17 @@
           color: black;
           background-color: #e9ecef;
         }
-
-        #container {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
     </style>
 </head>
 
 <body>
     <script>
-      // Connect to broker and subscribe to everything
       var client = mqtt.connect();
-      client.subscribe(["bulbstatus"]);
-
-      //client.on("message", function(topic, message) {
-      //   left_or_right = parseInt(message.toString());
-      //}
+      // client.subscribe(["bulbstatus"]);
     </script>
 
     <button onclick="client.publish('lightswitch', 'turnon')">Turn on the light</button>
     <button onclick="client.publish('lightswitch', 'turnoff')">Turn off the light</button>
-
-
 </body>
 
 </html>
