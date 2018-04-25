@@ -16,22 +16,78 @@
 
     <style>
         body {
-          font: 50pt Menlo, Monaco, Consolas, "Courier New", monospace;
-          color: black;
+          margin: 10px;
+          font: 15pt Menlo, Monaco, Consolas, "Courier New", monospace;
           background-color: #e9ecef;
+        }
+        .noselect {
+          -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+             -khtml-user-select: none; /* Konqueror HTML */
+               -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                    user-select: none; /* Non-prefixed version, currently
+                                          supported by Chrome and Opera */
+        }
+        button {
+          margin: 10px;
+        }
+        #amount {
+          width: 50%;
+          max-width: 500px;
         }
     </style>
 </head>
 
-<body>
-    <script>
-      var client = mqtt.connect();
-      // client.subscribe(["bulbstatus"]);
-    </script>
-
-    <button onclick="client.publish('lightswitch', 'turnon')">Turn on the light</button>
-    <button onclick="client.publish('lightswitch', 'turnoff')">Turn off the light</button>
+<body class="noselect">
+    <button id="on">Turn on</button><br>
+    <button id="off">Turn off</button><br>
+    <button id="hold">Hold</button><br><br>
+    <input id="amount" value=200 type="tel" pattern="[0-9]*" novalidate width=50> ms<br>
+    <button id="timed">Timed</button>
 </body>
+
+<script>
+  var client = mqtt.connect()
+  // client.subscribe(["bulbstatus"]);
+
+  function turnOn() {
+    client.publish('lightswitch', 'turnon')
+  }
+
+  function turnOff() {
+    client.publish('lightswitch', 'turnoff')
+  }
+
+
+  $("#on").on("click", function(){
+    turnOn()
+    window.clearTimeout(timeoutID)
+  })
+
+  $("#off").on("click", function(){
+    turnOff()
+    window.clearTimeout(timeoutID)
+  })
+
+  $("#hold").on("touchstart mousedown", function(){
+    turnOn()
+    window.clearTimeout(timeoutID)
+  })
+
+  $("#hold").on("touchend mouseup", function(){
+    turnOff()
+    window.clearTimeout(timeoutID);
+  })
+
+  $("#timed").on("click", function(){
+    turnOn()
+    timeoutID = window.setTimeout(function(){
+      turnOff()
+    }, $("#amount").val())
+  })
+
+</script>
 
 </html>
 
