@@ -161,6 +161,7 @@
 </body>
 <script>
 var client = mqtt.connect()
+
 // client.subscribe(["bulbstatus"]);
 
 // function goFwd() {
@@ -197,53 +198,53 @@ var client = mqtt.connect()
 // })
 
 $("#fwdButton").on("touchstart mousedown", function() {
-    client.publish('propel', 'fwd')
+    client.publish('propel', 'fwd', {qos: 2})
 })
 
 $("#bckwdButton").on("touchstart mousedown", function() {
-    client.publish('propel', 'bckwd')
+    client.publish('propel', 'bckwd', {qos: 2})
 })
 
 $("#panleftButton").on("touchstart mousedown", function() {
-    client.publish('propel', 'panleft')
+    client.publish('propel', 'panleft', {qos: 2})
 })
 
 $("#panrightButton").on("touchstart mousedown", function() {
-    client.publish('propel', 'panright')
+    client.publish('propel', 'panright', {qos: 2})
 })
 
 $("#turnleftButton").on("touchstart mousedown", function() {
-    client.publish('propel', 'turnleft')
+    client.publish('propel', 'turnleft', {qos: 2})
 })
 
 $("#turnrightButton").on("touchstart mousedown", function() {
-    client.publish('propel', 'turnright')
+    client.publish('propel', 'turnright', {qos: 2})
 })
 
 
 
 $("#fwdButton").on("touchend mouseup", function() {
-    client.publish('propel', 'turnoff')
+    client.publish('propel', 'turnoff', {qos: 2})
 })
 
 $("#bckwdButton").on("touchend mouseup", function() {
-    client.publish('propel', 'turnoff')
+    client.publish('propel', 'turnoff', {qos: 2})
 })
 
 $("#panleftButton").on("touchend mouseup", function() {
-    client.publish('propel', 'turnoff')
+    client.publish('propel', 'turnoff', {qos: 2})
 })
 
 $("#panrightButton").on("touchend mouseup", function() {
-    client.publish('propel', 'turnoff')
+    client.publish('propel', 'turnoff', {qos: 2})
 })
 
 $("#turnleftButton").on("touchend mouseup", function() {
-    client.publish('propel', 'turnoff')
+    client.publish('propel', 'turnoff', {qos: 2})
 })
 
 $("#turnrightButton").on("touchend mouseup", function() {
-    client.publish('propel', 'turnoff')
+    client.publish('propel', 'turnoff', {qos: 2})
 })
 
 // $("#timed").on("click", function(){

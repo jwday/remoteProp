@@ -48,52 +48,36 @@ void messageReceived(String &topic, String &payload) {
   Serial.println("incoming: " + topic + " - " + payload);
 
   if (topic == "propel" && payload == "fwd") {
-//    digitalWrite(D0, HIGH);   // turn the LED on (HIGH is the voltage level)
-//    digitalWrite(D3, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
 
   else if (topic == "propel" && payload == "bckwd") {
-//    digitalWrite(D1, HIGH);   // turn the LED on (HIGH is the voltage level)
-//    digitalWrite(D2, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D6, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D7, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
 
   else if (topic == "propel" && payload == "panright") {
-//    digitalWrite(D0, HIGH);   // turn the LED on (HIGH is the voltage level)
-//    digitalWrite(D1, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D6, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
 
   else if (topic == "propel" && payload == "panleft") {
-//    digitalWrite(D2, HIGH);   // turn the LED on (HIGH is the voltage level)
-//    digitalWrite(D3, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D7, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
 
   else if (topic == "propel" && payload == "turnleft") {
-//    digitalWrite(D0, HIGH);   // turn the LED on (HIGH is the voltage level)
-//    digitalWrite(D2, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D7, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
 
   else if (topic == "propel" && payload == "turnright") {
-//    digitalWrite(D1, HIGH);   // turn the LED on (HIGH is the voltage level)
-//    digitalWrite(D3, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D6, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
   
   else if (topic == "propel" && payload == "turnoff") {
-//    digitalWrite(D0, LOW);    // turn the LED off by making the voltage LOW
-//    digitalWrite(D1, LOW);    // turn the LED off by making the voltage LOW
-//    digitalWrite(D2, LOW);    // turn the LED off by making the voltage LOW
-//    digitalWrite(D3, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(D5, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(D6, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(D7, LOW);    // turn the LED off by making the voltage LOW
@@ -114,10 +98,6 @@ void setup() {
   client.onMessage(messageReceived);
 
   connect();
-//    pinMode(D0, OUTPUT);
-//    pinMode(D1, OUTPUT);
-//    pinMode(D2, OUTPUT);
-//    pinMode(D3, OUTPUT);
     pinMode(D5, OUTPUT);
     pinMode(D6, OUTPUT);
     pinMode(D7, OUTPUT);
@@ -129,6 +109,10 @@ void loop() {
   delay(10);  // <- fixes some issues with WiFi stability
 
   if (!client.connected()) {
+    digitalWrite(D5, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(D6, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(D7, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(D8, LOW);    // turn the LED off by making the voltage LOW
     connect();
   }
 

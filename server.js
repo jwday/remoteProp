@@ -1,16 +1,15 @@
-
 var mosca = require('mosca');
 
 var backendSettings = {
-  type: 'mongo',
-  url: 'mongodb://localhost:27017/mqtt',
-  pubsubCollection: 'ascoltatori',
-  mongo: {}
+    type: 'mongo',
+    url: 'mongodb://localhost:27017/mqtt',
+    pubsubCollection: 'ascoltatori',
+    mongo: {}
 };
 
 var moscaSettings = {
-  port: 1883,
-  backend: backendSettings
+    port: 1883,
+    backend: backendSettings
 };
 
 var express = require("express");
@@ -29,27 +28,31 @@ app.use(express.static(__dirname + "/image"));
 
 // Serve the dashboard at the root directory
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 app.get("/lightbulb", function(req, res) {
-  res.sendFile(__dirname + '/lightbulb.html');
+    res.sendFile(__dirname + '/lightbulb.html');
 });
 
 srv.listen(3000);
 
 broker.on('clientConnected', function(client) {
-  console.log('client connected', client.id);
+    console.log('client connected', client.id);
+});
+
+broker.on('clientDisconnected', function(client) {
+    broker.publish({topic: 'propel', payload: 'turnoff', qos: 2})
 });
 
 // fired when a message is received
 broker.on('published', function(packet, client) {
-  console.log('Published', packet.topic, packet.payload.toString());
+    console.log('Published', packet.topic, packet.payload.toString());
 });
 
 broker.on('ready', setup);
 
 // fired when the mqtt broker is ready
 function setup() {
-  console.log('Server is up and running');
+    console.log('Server is up and running');
 };
