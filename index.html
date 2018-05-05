@@ -6,88 +6,252 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Display</title>
-
     <script src="/mqtt.js"></script>
     <script src="/jquery.min.js"></script>
-
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <script src="/js/bootstrap.min.js"></script>
-
     <style>
-        body {
-          margin: 10px;
-          font: 15pt Menlo, Monaco, Consolas, "Courier New", monospace;
-          background-color: #e9ecef;
-        }
-        .noselect {
-          -webkit-touch-callout: none; /* iOS Safari */
-            -webkit-user-select: none; /* Safari */
-             -khtml-user-select: none; /* Konqueror HTML */
-               -moz-user-select: none; /* Firefox */
-                -ms-user-select: none; /* Internet Explorer/Edge */
-                    user-select: none; /* Non-prefixed version, currently
+    body {
+        margin: 10px;
+        font: 15pt Menlo, Monaco, Consolas, "Courier New", monospace;
+        background-color: #e9ecef;
+    }
+
+    .noselect {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently
                                           supported by Chrome and Opera */
-        }
-        button {
-          margin: 10px;
-        }
-        #amount {
-          width: 50%;
-          max-width: 500px;
-        }
+    }
+
+    .chevron {
+        width: 75px;
+        height: 75px;
+        background: url("chevron-up.svg") no-repeat center;
+    }
+
+    .chevron:active {
+        background-color: red;
+    }
+
+    .rotation {
+        width: 75px;
+        height: 75px;
+        background-size: contain !important;
+        background: url("counterclockwise.svg") no-repeat center;
+    }
+
+    .rotation:active {
+        background-color: red
+    }
+
+    .rotated90 {
+        transform: rotate(90deg);
+    }
+
+    .rotated180 {
+        transform: rotate(180deg);
+    }
+
+    .rotated270 {
+        transform: rotate(270deg);
+    }
+
+    .rotationFlipped {
+        transform: scaleX(-1);
+        background-size: contain !important;
+    }
+
+    #amount {
+        width: 50%;
+        max-width: 500px;
+    }
+
+    table {
+        width: 25%;
+        margin: auto;
+    }
+
+    td {
+        width: 33.33%;
+        position: relative;
+    }
+
+    td:after {
+        content: '';
+        display: block;
+        margin-top: 20%;
+    }
+
+    td .content {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: gold;
+    }
     </style>
 </head>
 
 <body class="noselect">
-    <button id="on">Turn on</button><br>
-    <button id="off">Turn off</button><br>
-    <button id="hold">Hold</button><br><br>
+    <table>
+        <!-- Rows -->
+        <tr>
+            <td></td>
+            <td>
+                <div align="center">
+                    <div id="fwdButton" class="chevron"></div>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <div align="center">
+                    <div id="panleftButton" class="chevron rotated270"></div>
+                </div>
+            </td>
+            <td>
+                <div align="center">Translate</div>
+            </td>
+            <td>
+                <div align="center">
+                    <div id="panrightButton" class="chevron rotated90"></div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div align="center">
+                    <div id="bckwdButton" class="chevron rotated180"></div>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <div align="center">
+                    <div id="turnleftButton" class="rotation"></div>
+                </div>
+            </td>
+            <td>
+                <div align="center">Rotate</div>
+            </td>
+            <td>
+                <div align="center">
+                    <div id="turnrightButton" class="rotation rotationFlipped"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <!--     <button id="hold">Hold</button><br><br>
     <input id="amount" value=200 type="tel" pattern="[0-9]*" novalidate width=50> ms<br>
-    <button id="timed">Timed</button>
+    <button id="timed">Timed</button> -->
 </body>
-
 <script>
-  var client = mqtt.connect()
-  // client.subscribe(["bulbstatus"]);
+var client = mqtt.connect()
+// client.subscribe(["bulbstatus"]);
 
-  function turnOn() {
-    client.publish('lightswitch', 'turnon')
-  }
+// function goFwd() {
+//   client.publish('propel', 'fwd')
+// }
+// function goBckwd() {
+//   client.publish('propel', 'bckwd')
+// }
+// function goLeft() {
+//   client.publish('propel', 'panleft')
+// }
+// function goRight() {
+//   client.publish('propel', 'panright')
+// }
+// function turnLeft() {
+//   client.publish('propel', 'turnleft')
+// }
+// function turnRight() {
+//   client.publish('propel', 'turnright')
+// }
+// function turnOff() {
+//   client.publish('propel', 'turnoff')
+// }
 
-  function turnOff() {
-    client.publish('lightswitch', 'turnoff')
-  }
+
+// $("#on").on("click", function(){
+//   turnOn()
+//   window.clearTimeout(timeoutID)
+// })
+
+// $("#off").on("click", function(){
+//   turnOff()
+//   window.clearTimeout(timeoutID)
+// })
+
+$("#fwdButton").on("touchstart mousedown", function() {
+    client.publish('propel', 'fwd')
+})
+
+$("#bckwdButton").on("touchstart mousedown", function() {
+    client.publish('propel', 'bckwd')
+})
+
+$("#panleftButton").on("touchstart mousedown", function() {
+    client.publish('propel', 'panleft')
+})
+
+$("#panrightButton").on("touchstart mousedown", function() {
+    client.publish('propel', 'panright')
+})
+
+$("#turnleftButton").on("touchstart mousedown", function() {
+    client.publish('propel', 'turnleft')
+})
+
+$("#turnrightButton").on("touchstart mousedown", function() {
+    client.publish('propel', 'turnright')
+})
 
 
-  $("#on").on("click", function(){
-    turnOn()
-    window.clearTimeout(timeoutID)
-  })
 
-  $("#off").on("click", function(){
-    turnOff()
-    window.clearTimeout(timeoutID)
-  })
+$("#fwdButton").on("touchend mouseup", function() {
+    client.publish('propel', 'turnoff')
+})
 
-  $("#hold").on("touchstart mousedown", function(){
-    turnOn()
-    window.clearTimeout(timeoutID)
-  })
+$("#bckwdButton").on("touchend mouseup", function() {
+    client.publish('propel', 'turnoff')
+})
 
-  $("#hold").on("touchend mouseup", function(){
-    turnOff()
-    window.clearTimeout(timeoutID);
-  })
+$("#panleftButton").on("touchend mouseup", function() {
+    client.publish('propel', 'turnoff')
+})
 
-  $("#timed").on("click", function(){
-    turnOn()
-    timeoutID = window.setTimeout(function(){
-      turnOff()
-    }, $("#amount").val())
-  })
+$("#panrightButton").on("touchend mouseup", function() {
+    client.publish('propel', 'turnoff')
+})
 
+$("#turnleftButton").on("touchend mouseup", function() {
+    client.publish('propel', 'turnoff')
+})
+
+$("#turnrightButton").on("touchend mouseup", function() {
+    client.publish('propel', 'turnoff')
+})
+
+// $("#timed").on("click", function(){
+//   turnOn()
+//   timeoutID = window.setTimeout(function(){
+//     turnOff()
+//   }, $("#amount").val())
+// })
 </script>
 
 </html>
-
