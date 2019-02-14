@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <MQTT.h>
 
-const char ssid[] = "Covenant Battle Network";
-const char pass[] = "Westwood1";
+const char ssid[] = "PropServer";
+const char pass[] = "PerformHumanSimulator";
 
 // Because I'm using a NodeMCU Amica microcontroller (which uses some other chipset), I need to redefine the pins to match how they're labeled on the board.
 // For example: Pin D7 on the NodeMCU Amica actually corresponds to Pin 13 in the code.
@@ -94,7 +94,7 @@ void setup() {
 
   // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
   // You need to set the IP address directly.
-  client.begin("192.168.137.247", net);
+  client.begin("192.168.4.100", net);
   client.onMessage(messageReceived);
 
   connect();
