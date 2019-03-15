@@ -30,25 +30,46 @@ byte adc_value0, adc_value1, adc_value2, adc_value3;
 WiFiClient net;  // Instantiate an instance of WiFiClient, call it "net"
 MQTTClient client;  // Instantiate an instance of MQTTClient, call it "client"
 
-unsigned long lastMillis = 0;  // For timekeeping while performing "parallel" processes
+unsigned long previousMillis = 0;  // For timekeeping while performing "parallel" processes
+
+
+
 
 void connect() {
-  Serial.print("checking wifi...");
-  while (WiFi.status() != WL_CONNECTED) {
+  WiFi.begin(ssid, pass);
+  Serial.print("Attempting to connect to ");
+  Serial.println(ssid);
+
+  while(WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  
+  if(WiFi.status() == WL_CONNECTED) {
+    Serial.print("\nWiFi connected to ");
+    Serial.println(WiFi.SSID());
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("Gateway: ");
+    Serial.println(WiFi.gatewayIP());
+    Serial.println("");
+  }
+  
+  Serial.println("Connecting to broker...");
+  // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
+  // You need to set the IP address of the broker directly.
+  // client.begin("192.168.0.200", net);
+  client.begin("192.168.43.169", net);
+  while (!client.connect("arduino")) {
     Serial.print(".");
     delay(1000);
   }
 
-  Serial.print("\nconnecting...");
-  while (!client.connect("arduino", "try", "try")) {
-    Serial.print(".");
-    delay(1000);
-  }
-
-  Serial.println("\nconnected!");
-
-  client.subscribe("propel");
+  Serial.println("Connected to broker!");
 }
+
+
+
 
 void messageReceived(String &topic, String &payload) {
   Serial.println("incoming: " + topic + " - " + payload);
@@ -93,25 +114,29 @@ void messageReceived(String &topic, String &payload) {
 
 
 
-
 void setup() {
   Serial.begin(9600);
-  WiFi.begin(ssid, pass);
+
+//  int numberOfNetworks = WiFi.scanNetworks(); 
+  
+//  for (int i=0; i<numberOfNetworks; i++){
+//      Serial.print("Network name: ");
+//      Serial.println(WiFi.SSID(i));
+//      Serial.println("-----------------------");
+//  }
+
   Wire.begin();
-
-  // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
-  // You need to set the IP address of the broker directly.
-  // client.begin("192.168.0.200", net);
-  client.begin("192.168.43.169", net);
-  client.onMessage(messageReceived);
-
   connect();
   
+  client.onMessage(messageReceived);
+
   pinMode(D5, OUTPUT);
   pinMode(D6, OUTPUT);
   pinMode(D7, OUTPUT);
   pinMode(D8, OUTPUT);
 }
+
+
 
 void loop() {
   client.loop();
@@ -140,6 +165,10 @@ void loop() {
 
   // String payload = String(adc_value0);
   // println(payload);
-  client.publish("float_pressure", String(adc_value0));
-  client.publish("prop_pressure", String(adc_value1));
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= 100) {
+    client.publish("float_pressure", String(adc_value0));
+    client.publish("prop_pressure", String(adc_value3));
+    previousMillis = currentMillis;
+  }
 }

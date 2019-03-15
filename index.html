@@ -30,8 +30,7 @@
         -ms-user-select: none;
         /* Internet Explorer/Edge */
         user-select: none;
-        /* Non-prefixed version, currently
-                                          supported by Chrome and Opera */
+        /* Non-prefixed version, currently supported by Chrome and Opera */
     }
 
     .chevron {
@@ -154,15 +153,60 @@
                 </div>
             </td>
         </tr>
+        <tr>
+            <td>
+                <div align="center">
+                    <div align="center">Float PSI:</div><div id="float_psi"></div>
+                </div>
+            </td>
+            <td>
+                <div align="center"></div>
+            </td>
+            <td>
+                <div align="center">
+                    <div align="center">Prop PSI:</div><div id="prop_psi"></div>
+                </div>
+            </td>
+        </tr>
+
     </table>
     <!--     <button id="hold">Hold</button><br><br>
     <input id="amount" value=200 type="tel" pattern="[0-9]*" novalidate width=50> ms<br>
     <button id="timed">Timed</button> -->
 </body>
+
 <script>
 var client = mqtt.connect()
 
-// client.subscribe(["bulbstatus"]);
+client.subscribe(["float_pressure"]);
+client.subscribe(["prop_pressure"]);
+
+client.on('message', function (topic, message) {
+	if (topic == "float_pressure") {
+		float_psi = parseFloat(message.toString());
+		$("#float_psi").text(float_psi);
+
+		if (float_psi > 70) {
+			$("#float_psi").css("background-color", "red")
+		}
+
+		else {
+			$("#float_psi").css("background-color", "transparent")
+		}
+
+	} else if (topic == "prop_pressure") {
+		prop_psi = parseFloat(message.toString());
+		$("#prop_psi").text(prop_psi);
+
+		if (prop_psi > 80) {
+			$("#prop_psi").css("background-color", "red")
+		}
+
+		else {
+			$("#prop_psi").css("background-color", "transparent")
+		}
+	}
+})
 
 // function goFwd() {
 //   client.publish('propel', 'fwd')
