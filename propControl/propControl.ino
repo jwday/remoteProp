@@ -150,25 +150,30 @@ void loop() {
     connect(); // Attempt to connect
   }
 
-  Wire.beginTransmission(PCF8591);
-  Wire.write(0x04); // Send a byte to the PCF8591 to tell it to read all channels
-  Wire.endTransmission();
-  Wire.requestFrom(PCF8591, 5); // Request one byte from the PCF8591, which should correspond to the reading of Channel 3
-
-  while (Wire.available()) {
-    adc_value0 = Wire.read(); //This needs two reads to get the value.
-    adc_value0 = Wire.read();
-    adc_value1 = Wire.read();
-    adc_value2 = Wire.read();
-    adc_value3 = Wire.read();
-  }
-
   // String payload = String(adc_value0);
   // println(payload);
+  
   unsigned long currentMillis = millis();
+  
   if (currentMillis - previousMillis >= 100) {
-    client.publish("float_pressure", String(adc_value0));
-    client.publish("prop_pressure", String(adc_value3));
+    Wire.beginTransmission(PCF8591);
+    Wire.write(0x04); // Send a byte to the PCF8591 to tell it to read all channels
+    Wire.endTransmission();
+    Wire.requestFrom(PCF8591, 5); // Request one byte from the PCF8591, which should correspond to the reading of Channel 3
+  
+    while (Wire.available()) {
+      adc_value0 = Wire.read(); //This needs two reads to get the value.
+      adc_value0 = Wire.read();
+      adc_value1 = Wire.read();
+      adc_value2 = Wire.read();
+      adc_value3 = Wire.read();
+    }
+
+    float float_psi = round(adc_value0*0.478 + 3.91 - 14.8);
+    float prop_psi = round(adc_value1*0.478 + 3.91 - 14.8);
+    
+    client.publish("float_pressure", String(float_psi));
+    client.publish("prop_pressure", String(prop_psi));
     previousMillis = currentMillis;
   }
 }
