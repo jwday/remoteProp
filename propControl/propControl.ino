@@ -2,10 +2,8 @@
 #include <Wire.h>
 #include <MQTT.h>
 
-//const char ssid[] = "Apogee";
-//const char pass[] = "PerformHumanSimulator";
-const char ssid[] = "Covenant Battle Network";
-const char pass[] = "Westwood1";
+const char ssid[] = "Apogee";
+const char pass[] = "PerformHumanSimulator";
 
 // Because I'm using a NodeMCU Amica microcontroller (which uses some other chipset), I need to redefine the pins to match how they're labeled on the board.
 // For example: Pin D7 on the NodeMCU Amica actually corresponds to Pin 13 in the code.
@@ -31,11 +29,12 @@ WiFiClient net;  // Instantiate an instance of WiFiClient, call it "net"
 MQTTClient client;  // Instantiate an instance of MQTTClient, call it "client"
 
 unsigned long previousMillis = 0;  // For timekeeping while performing "parallel" processes
-
+float pubRate = 200;
 
 
 
 void connect() {
+  WiFi.hostname("propcontroller");
   WiFi.begin(ssid, pass);
   Serial.print("Attempting to connect to ");
   Serial.println(ssid);
@@ -58,16 +57,15 @@ void connect() {
   Serial.println("Connecting to broker...");
   // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
   // You need to set the IP address of the broker directly.
-  // client.begin("192.168.0.200", net);
-  client.begin("192.168.43.169", net);
-  while (!client.connect("arduino")) {
+  client.begin("192.168.0.200", net);
+  while (!client.connect("propcontroller")) {
     Serial.print(".");
     delay(1000);
   }
 
   Serial.println("Connected to broker!");
+  client.subscribe("propel");
 }
-
 
 
 
@@ -75,6 +73,7 @@ void messageReceived(String &topic, String &payload) {
   Serial.println("incoming: " + topic + " - " + payload);
 
   if (topic == "propel" && payload == "fwd") {
+    Serial.println("FULL SPEED AHEAD!");
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
@@ -115,25 +114,18 @@ void messageReceived(String &topic, String &payload) {
 
 
 void setup() {
-  Serial.begin(9600);
-
-//  int numberOfNetworks = WiFi.scanNetworks(); 
-  
-//  for (int i=0; i<numberOfNetworks; i++){
-//      Serial.print("Network name: ");
-//      Serial.println(WiFi.SSID(i));
-//      Serial.println("-----------------------");
-//  }
-
-  Wire.begin();
-  connect();
-  
-  client.onMessage(messageReceived);
-
   pinMode(D5, OUTPUT);
   pinMode(D6, OUTPUT);
   pinMode(D7, OUTPUT);
   pinMode(D8, OUTPUT);
+  pinMode(16, OUTPUT);
+  digitalWrite(16, LOW);
+  
+  Serial.begin(9600);
+  Wire.begin();
+  
+  connect();
+  client.onMessage(messageReceived);
 }
 
 
@@ -149,13 +141,10 @@ void loop() {
     digitalWrite(D8, LOW);
     connect(); // Attempt to connect
   }
-
-  // String payload = String(adc_value0);
-  // println(payload);
   
   unsigned long currentMillis = millis();
   
-  if (currentMillis - previousMillis >= 100) {
+  if (currentMillis - previousMillis >= pubRate) {
     Wire.beginTransmission(PCF8591);
     Wire.write(0x04); // Send a byte to the PCF8591 to tell it to read all channels
     Wire.endTransmission();
