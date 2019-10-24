@@ -51,7 +51,7 @@
     .chevron {
         width: 75px;
         height: 75px;
-        background: url("/image/chevron-up.svg") no-repeat center;
+        background: url("/chevron-up.svg") no-repeat center;
     }
 
     .chevron:active {
@@ -62,7 +62,7 @@
         width: 75px;
         height: 75px;
         background-size: contain !important;
-        background: url("/image/counterclockwise.svg") no-repeat center;
+        background: url("/counterclockwise.svg") no-repeat center;
     }
 
     .rotation:active {
@@ -211,7 +211,7 @@
 <script>
 var client = mqtt.connect()
 
-client.subscribe(["float_pressure", "prop_pressure"]);
+client.subscribe(["float_pressure", "prop_pressure", "timeOnReturn"]);
 
 client.on('message', function (topic, message) {
 	if (topic == "float_pressure") {
@@ -230,7 +230,9 @@ client.on('message', function (topic, message) {
 			$("#float_psi").css("background-color", "transparent")
 		}
 
-	} else if (topic == "prop_pressure") {
+    } 
+    
+    else if (topic == "prop_pressure") {
 		prop_psi = parseFloat(message.toString());
 		$("#prop_psi").text(prop_psi);
 
@@ -245,7 +247,13 @@ client.on('message', function (topic, message) {
 		else {
 			$("#prop_psi").css("background-color", "transparent")
 		}
-	}
+
+    } 
+    
+    else if (topic == "timeOnReturn") {
+		timeOn = parseFloat(message.toString());
+		$("#timeReturn").text(timeOn);
+    }
 })
 
 // function goFwd() {
@@ -332,8 +340,8 @@ $("#turnrightButton").on("touchend mouseup", function() {
 })
 
 $("#sendButton").on("touchend mouseup", function() {
-    
-    $("#timeReturn").text('Bar');
+    timeIn = $("#timeInput").val();
+    client.publish('timedPropel', timeIn.toString())
 })
 
 // $("#timed").on("click", function(){

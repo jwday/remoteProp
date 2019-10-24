@@ -24,15 +24,12 @@ broker.attachHttpServer(srv);
 app.use(express.static(path.dirname(require.resolve("mosca")) + "/public"));
 app.use(express.static(path.dirname(require.resolve("jquery"))));
 app.use(express.static(path.dirname(require.resolve("bootstrap")) + "/../"));
+app.use(express.static(__dirname));
 app.use(express.static(__dirname + "/image"));
 
 // Serve the dashboard at the root directory
 app.get("/", function(req, res) {
     res.sendFile(__dirname + '/index.html');
-});
-
-app.get("/lightbulb", function(req, res) {
-    res.sendFile(__dirname + '/lightbulb.html');
 });
 
 srv.listen(3000);
