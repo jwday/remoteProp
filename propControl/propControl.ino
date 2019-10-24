@@ -5,6 +5,19 @@
 const char ssid[] = "Apogee";
 const char pass[] = "PerformHumanSimulator";
 
+// Variables for commanding a prescribed valve-open time
+bool holdOpenSwitch = false;
+float commandedBurnTime;
+unsigned long openedMillis;  // The time at which the valve was commanded to be opened
+
+// Variabkles for timekeeping while performing "parallel" processes
+unsigned long currentMillis;
+unsigned long previousMillis = 0; 
+
+// Set the publish rate (in milliseconds) for publishing pressure values
+float pubRate = 200;
+
+
 // Because I'm using a NodeMCU Amica microcontroller (which uses some other chipset), I need to redefine the pins to match how they're labeled on the board.
 // For example: Pin D7 on the NodeMCU Amica actually corresponds to Pin 13 in the code.
 // I don't know why this is a thing, but it is.
@@ -28,9 +41,21 @@ byte adc_value0, adc_value1, adc_value2, adc_value3;
 WiFiClient net;  // Instantiate an instance of WiFiClient, call it "net"
 MQTTClient client;  // Instantiate an instance of MQTTClient, call it "client"
 
-unsigned long previousMillis = 0;  // For timekeeping while performing "parallel" processes
-float pubRate = 200;
 
+
+
+
+void timedPropel() {
+  if (currentMillis - openedMillis >= commandedBurnTime) {
+    unsigned long actualBurnTime = currentMillis - openedMillis;
+    digitalWrite(D5, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(D6, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(D7, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(D8, LOW);    // turn the LED off by making the voltage LOW
+    holdOpenSwitch = false;
+    client.publish("timedPropelReturn", String(actualBurnTime));
+  }
+}
 
 
 void connect() {
@@ -65,6 +90,7 @@ void connect() {
 
   Serial.println("Connected to broker!");
   client.subscribe("propel");
+  client.subscribe("timedPropel");
 }
 
 
@@ -73,7 +99,6 @@ void messageReceived(String &topic, String &payload) {
   Serial.println("incoming: " + topic + " - " + payload);
 
   if (topic == "propel" && payload == "fwd") {
-    Serial.println("FULL SPEED AHEAD!");
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
   }
@@ -109,6 +134,15 @@ void messageReceived(String &topic, String &payload) {
     digitalWrite(D7, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(D8, LOW);    // turn the LED off by making the voltage LOW
   }
+
+  else if (topic == "timedPropel") {
+    holdOpenSwitch = true;
+    commandedBurnTime = payload.toFloat();
+    openedMillis = millis();
+    digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
+    timedPropel();  // Only sending "openedTime" because the function requires a number to be passed
+  }
 }
 
 
@@ -142,10 +176,10 @@ void loop() {
     connect(); // Attempt to connect
   }
   
-  unsigned long currentMillis = millis();
+  currentMillis = millis();
   
   if (currentMillis - previousMillis >= pubRate) {
-    Wire.beginTransmission(PCF8591);
+    Wire.beginTransmission(PCF8591);  // Get data from the A2D Converter (PCF8591)
     Wire.write(0x04); // Send a byte to the PCF8591 to tell it to read all channels
     Wire.endTransmission();
     Wire.requestFrom(PCF8591, 5); // Request one byte from the PCF8591, which should correspond to the reading of Channel 3
@@ -164,5 +198,9 @@ void loop() {
     client.publish("float_pressure", String(float_psi));
     client.publish("prop_pressure", String(prop_psi));
     previousMillis = currentMillis;
+  }
+
+  if (holdOpenSwitch) {
+    timedPropel();
   }
 }

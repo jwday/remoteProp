@@ -250,7 +250,7 @@ client.on('message', function (topic, message) {
 
     } 
     
-    else if (topic == "timeOnReturn") {
+    else if (topic == "timedPropelReturn") {
 		timeOn = parseFloat(message.toString());
 		$("#timeReturn").text(timeOn);
     }
