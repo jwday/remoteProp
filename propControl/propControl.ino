@@ -82,15 +82,15 @@ void connect() {
   Serial.println("Connecting to broker...");
   // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
   // You need to set the IP address of the broker directly.
-  client.begin("192.168.0.200", net);
+  // client.begin("192.168.0.200", net);
+  client.begin("192.168.43.68", net);
   while (!client.connect("propcontroller")) {
     Serial.print(".");
     delay(1000);
   }
 
   Serial.println("Connected to broker!");
-  client.subscribe("propel");
-  client.subscribe("timedPropel");
+  client.subscribe(["propel", "timedPropel"]);
 }
 
 
