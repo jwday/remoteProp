@@ -7,7 +7,7 @@ const char pass[] = "PerformHumanSimulator";
 
 // Variables for commanding a prescribed valve-open time
 bool holdOpenSwitch = false;
-float commandedBurnTime;
+unsigned long commandedBurnTimeMillis;
 unsigned long openedMillis;  // The time at which the valve was commanded to be opened
 
 // Variabkles for timekeeping while performing "parallel" processes
@@ -46,7 +46,8 @@ MQTTClient client;  // Instantiate an instance of MQTTClient, call it "client"
 
 
 void timedPropel() {
-  if (currentMillis - openedMillis >= commandedBurnTime) {
+  currentMillis = micros();
+  if (currentMillis - openedMillis >= commandedBurnTimeMillis) {
     unsigned long actualBurnTime = currentMillis - openedMillis;
     digitalWrite(D5, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(D6, LOW);    // turn the LED off by making the voltage LOW
@@ -54,9 +55,14 @@ void timedPropel() {
     digitalWrite(D8, LOW);    // turn the LED off by making the voltage LOW
     holdOpenSwitch = false;
     client.publish("timedPropelReturn", String(actualBurnTime));
+    Serial.print("Opened Time is ");
+    Serial.println(openedMillis);
+    Serial.print("Closed Time is ");
+    Serial.println(currentMillis);
+    Serial.println("");
     Serial.print("Thrust command complete. Thrust held for ");
     Serial.print(actualBurnTime);
-    Serial.println(" seconds.");
+    Serial.println(" microseconds.");
   }
 }
 
@@ -141,11 +147,11 @@ void messageReceived(String &topic, String &payload) {
 
   else if (topic == "timedPropel") {
     holdOpenSwitch = true;
-    commandedBurnTime = payload.toFloat();
+    commandedBurnTimeMillis = (unsigned long)(payload.toFloat()*1000000.0);
     Serial.print("Hold-open command received. Thrust for ");
-    Serial.print(commandedBurnTime);
-    Serial.println(" seconds.");
-    openedMillis = millis();
+    Serial.print(commandedBurnTimeMillis);
+    Serial.println(" microseconds.");
+    openedMillis = micros();
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
     timedPropel();  // Only sending "openedTime" because the function requires a number to be passed
