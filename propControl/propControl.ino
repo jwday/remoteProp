@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <Wire.h>
-#include <MQTT.h>
+#include <MQTT.h>  // MQTT Library by Joel Gaehwiler, https://github.com/256dpi/arduino-mqtt
 
 const char ssid[] = "Apogee";
 const char pass[] = "PerformHumanSimulator";
@@ -54,6 +54,9 @@ void timedPropel() {
     digitalWrite(D8, LOW);    // turn the LED off by making the voltage LOW
     holdOpenSwitch = false;
     client.publish("timedPropelReturn", String(actualBurnTime));
+    Serial.print("Thrust command complete. Thrust held for ");
+    Serial.print(actualBurnTime);
+    Serial.println(" seconds.");
   }
 }
 
@@ -82,7 +85,8 @@ void connect() {
   Serial.println("Connecting to broker...");
   // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
   // You need to set the IP address of the broker directly.
-  client.begin("192.168.0.200", net);
+  //client.begin("192.168.0.200", net);
+  client.begin("192.168.43.68", net);
   while (!client.connect("propcontroller")) {
     Serial.print(".");
     delay(1000);
@@ -138,6 +142,9 @@ void messageReceived(String &topic, String &payload) {
   else if (topic == "timedPropel") {
     holdOpenSwitch = true;
     commandedBurnTime = payload.toFloat();
+    Serial.print("Hold-open command received. Thrust for ");
+    Serial.print(commandedBurnTime);
+    Serial.println(" seconds.");
     openedMillis = millis();
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
