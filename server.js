@@ -13,11 +13,14 @@ var moscaSettings = {
 };
 
 var express = require("express");
+var serveIndex = require('serve-index')
 var http = require("http");
 var path = require("path");
+var fs = require('fs');
+
 var record = false;
-var data_array = [['time', 'topic', 'payload']];
-const testdata = require('fs');
+var data_array = [[Date()]];
+
 
 
 var app = express();
@@ -29,17 +32,16 @@ app.use(express.static(path.dirname(require.resolve("mosca")) + "/public"));
 app.use(express.static(path.dirname(require.resolve("jquery"))));
 app.use(express.static(path.dirname(require.resolve("bootstrap")) + "/../"));
 app.use(express.static(__dirname));
-app.use(express.static(__dirname + "/image"));
-app.use(express.static(__dirname + "/data"));
+app.use(express.static(__dirname + '/image'));
+app.use('/image', express.static(__dirname + '/image'), serveIndex(__dirname + '/image', {'icons': true}));
+app.use('/data', express.static(__dirname + '/data'), serveIndex(__dirname + '/data', {'icons': true}));
 
 // Serve the dashboard at the root directory
 app.get("/", function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get("/data", function(req, res) {
-    res.sendFile(__dirname + '/data/testdata');
-});
+
 
 srv.listen(3000);
 
@@ -65,23 +67,21 @@ broker.on('published', function(packet, client) {
     if (packet.topic=="timedPropel" && Boolean(record)==false) {
         record = true;
         console.log('Recording data');
-        // var timestamp_array = [];
-        // var topic_array = [];
-        // var payload_array = [];
+        data_array.push(['Time (s)', 'Topic', 'Payload'])
+        stopwatch_ref = Date.now();
     };
 
     if (Boolean(record)==true) {
-        // timestamp_array.push(Date.now());
-        // topic_array.push(packet.topic);
-        // payload_array.push(packet.payload.toString());
-        data_array.push([Date.now(), packet.topic, packet.payload.toString()])
+        stopwatch = Date.now()-stopwatch_ref;
+        data_array.push([stopwatch/1000, packet.topic, packet.payload.toString()])
     };
 
     if (packet.topic=="timedPropelReturn" && Boolean(record)==true) {
         record = false;
         console.log('Stopped recording data');
+        var filename = formatDateTime(Date())
 
-        testdata.writeFile(__dirname + '/data/testdata.txt', arrayToCSV(data_array), function(err) {
+        fs.writeFile(__dirname + '/data/' + filename + '_testdata.csv', arrayToCSV(data_array), function(err) {
             if(err) {
                 return console.log(err);
             }
@@ -122,3 +122,19 @@ function arrayToCSV(twoDiArray) {
 };
 
 
+function formatDateTime(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+        hour = '' + d.getHours();
+        minute = '' + d.getMinutes();
+        second = '' + d.getSeconds(); 
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year+month+day, hour+minute+second].join('_');
+}
