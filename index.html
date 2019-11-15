@@ -215,8 +215,9 @@ client.subscribe(["float_pressure", "prop_pressure", "timedPropelReturn"]);
 
 client.on('message', function (topic, message) {
 	if (topic == "float_pressure") {
-		float_psi = parseFloat(message.toString());
+		float_psi = parseFloat(message.toString()).toFixed(1);
 		$("#float_psi").text(float_psi);
+        
 
 		if (float_psi >= 50 && float_psi < 70) {
 			$("#float_psi").css("background-color", "yellow")
@@ -233,7 +234,7 @@ client.on('message', function (topic, message) {
     } 
     
     else if (topic == "prop_pressure") {
-		prop_psi = parseFloat(message.toString());
+		prop_psi = parseFloat(message.toString()).toFixed(1);
 		$("#prop_psi").text(prop_psi);
 
 		if (prop_psi >= 70 && prop_psi < 90) {
