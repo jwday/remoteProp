@@ -15,7 +15,7 @@ unsigned long currentMillis;
 unsigned long previousMillis = 0; 
 
 // Set the publish rate (in milliseconds) for publishing pressure values
-float pubRate = 200;
+float pubRate = 100;
 
 
 // Because I'm using a NodeMCU Amica microcontroller (which uses some other chipset), I need to redefine the pins to match how they're labeled on the board.
@@ -91,8 +91,9 @@ void connect() {
   Serial.println("Connecting to broker...");
   // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
   // You need to set the IP address of the broker directly.
-  // client.begin("192.168.0.200", net);
-  client.begin("192.168.43.68", net);
+  // client.begin("192.168.0.200", net);  // User for connecting via Apogee hotspot in the upstairs lab to Raspberry Pi
+  // client.begin("192.168.43.68", net);  // Use for connecting via 4G tether to Raspberry Pi
+  client.begin("192.168.43.106", net);  // Use for connecting via 4G tether to LCARS 
   while (!client.connect("propcontroller")) {
   Serial.print(".");
   delay(1000);
@@ -204,12 +205,14 @@ void loop() {
       adc_value2 = Wire.read();
       adc_value3 = Wire.read();
     }
-
-    float float_psi = round(adc_value0*0.478 + 3.91 - 14.8);
-    float prop_psi = round(adc_value1*0.478 + 3.91 - 14.8);
+    
+    float float_psi = adc_value0*0.478 + 3.91 - 14.8 - 1.54;
+    float prop_psi = adc_value1*0.478 + 3.91 - 14.8 - 0.10;
     
     client.publish("float_pressure", String(float_psi));
     client.publish("prop_pressure", String(prop_psi));
+
+    
     previousMillis = currentMillis;
   }
 
