@@ -19,7 +19,8 @@ var path = require("path");
 var fs = require('fs');
 
 var record = false;
-var data_array = [[Date()]];
+var prop_data_array = [[Date()]];
+var float_data_array = [[Date()]];
 
 
 
@@ -67,13 +68,26 @@ broker.on('published', function(packet, client) {
     if (packet.topic=="timedPropel" && Boolean(record)==false) {
         record = true;
         console.log('Recording data');
-        data_array.push(['Time (s)', 'Topic', 'Payload'])
+        
+        // Reset the data arrays in case they've already been filled from a previous recording
+        prop_data_array = [[Date()]];
+        float_data_array = [[Date()]];
+
+        // Append column names
+        prop_data_array.push(['Time (s)', 'Topic', 'Payload'])
+        float_data_array.push(['Time (s)', 'Topic', 'Payload'])
+        
         stopwatch_ref = Date.now();
     };
 
     if (Boolean(record)==true) {
         stopwatch = Date.now()-stopwatch_ref;
-        data_array.push([stopwatch/1000, packet.topic, packet.payload.toString()])
+        if (packet.topic=="prop_pressure") {
+            prop_data_array.push([stopwatch/1000, packet.topic, parseFloat(packet.payload.toString()).toFixed(1)])
+        };
+        if (packet.topic=="float_pressure") {
+            float_data_array.push([stopwatch/1000, packet.topic, parseFloat(packet.payload.toString()).toFixed(1)])
+        };
     };
 
     if (packet.topic=="timedPropelReturn" && Boolean(record)==true) {
@@ -81,12 +95,19 @@ broker.on('published', function(packet, client) {
         console.log('Stopped recording data');
         var filename = formatDateTime(Date())
 
-        fs.writeFile(__dirname + '/data/' + filename + '_testdata.csv', arrayToCSV(data_array), function(err) {
+        fs.writeFile(__dirname + '/data/' + filename + '_prop_data.csv', arrayToCSV(prop_data_array), function(err) {
             if(err) {
                 return console.log(err);
             }
-            console.log("The file was saved!");
-        });     
+            console.log("Prop data was saved!");
+        });
+
+        fs.writeFile(__dirname + '/data/' + filename + '_float_data.csv', arrayToCSV(float_data_array), function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            console.log("Float data was saved!");
+        });  
     };    
 });
 
