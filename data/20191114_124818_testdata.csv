@@ -1,0 +1,18 @@
+Thu Nov 14 2019 12:48:03 GMT-0800 (PST)
+Time (s),Topic,Payload
+0,timedPropel,01337
+0.852,propel,turnright
+0.926,propel,turnoff
+1.001,propel,turnright
+1.054,propel,turnoff
+1.136,propel,turnright
+1.217,propel,turnoff
+1.711,propel,bckwd
+1.79,propel,turnoff
+1.83,propel,bckwd
+1.914,propel,turnoff
+2.189,propel,fwd
+2.268,propel,turnoff
+2.356,propel,fwd
+2.408,propel,turnoff
+5.049,timedPropelReturn,1337
