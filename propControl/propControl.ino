@@ -7,12 +7,14 @@ const char pass[] = "PerformHumanSimulator";
 
 // Variables for commanding a prescribed valve-open time
 bool holdOpenSwitch = false;
-unsigned long commandedBurnTimeMillis;
-unsigned long openedMillis;  // The time at which the valve was commanded to be opened
+unsigned long commandedBurnTimeMicros;
+unsigned long openedMicros;  // The time at which the valve was commanded to be opened
 
 // Variabkles for timekeeping while performing "parallel" processes
 unsigned long currentMillis;
-unsigned long previousMillis = 0; 
+unsigned long currentMicros;
+unsigned long previousMillis = 0;
+unsigned long previousMicros = 0;
 
 // Set the publish rate (in milliseconds) for publishing pressure values
 float pubRate = 100;
@@ -46,9 +48,9 @@ MQTTClient client;  // Instantiate an instance of MQTTClient, call it "client"
 
 
 void timedPropel() {
-  currentMillis = micros();
-  if (currentMillis - openedMillis >= commandedBurnTimeMillis) {
-    unsigned long actualBurnTime = currentMillis - openedMillis;
+  currentMicros = micros();
+  if (currentMicros - openedMicros >= commandedBurnTimeMicros) {
+    unsigned long actualBurnTime = currentMicros - openedMicros;
     digitalWrite(D5, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(D6, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(D7, LOW);    // turn the LED off by making the voltage LOW
@@ -56,9 +58,9 @@ void timedPropel() {
     holdOpenSwitch = false;
     client.publish("timedPropelReturn", String(actualBurnTime));
     Serial.print("Opened Time is ");
-    Serial.println(openedMillis);
+    Serial.println(openedMicros);
     Serial.print("Closed Time is ");
-    Serial.println(currentMillis);
+    Serial.println(currentMicros);
     Serial.println("");
     Serial.print("Thrust command complete. Thrust held for ");
     Serial.print(actualBurnTime);
@@ -91,9 +93,11 @@ void connect() {
   Serial.println("Connecting to broker...");
   // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
   // You need to set the IP address of the broker directly.
-  // client.begin("192.168.0.200", net);  // User for connecting via Apogee hotspot in the upstairs lab to Raspberry Pi
+  
+  client.begin("192.168.0.200", net);  // User for connecting via Apogee hotspot in the upstairs lab to Raspberry Pi
   // client.begin("192.168.43.68", net);  // Use for connecting via 4G tether to Raspberry Pi
-  client.begin("192.168.43.106", net);  // Use for connecting via 4G tether to LCARS 
+  // client.begin("192.168.43.106", net);  // Use for connecting via 4G tether to LCARS 
+  
   while (!client.connect("propcontroller")) {
   Serial.print(".");
   delay(1000);
@@ -148,11 +152,11 @@ void messageReceived(String &topic, String &payload) {
 
   else if (topic == "timedPropel") {
     holdOpenSwitch = true;
-    commandedBurnTimeMillis = (unsigned long)(payload.toFloat()*1000000.0);
+    commandedBurnTimeMicros = (unsigned long)(payload.toFloat()*1000000.0);
     Serial.print("Hold-open command received. Thrust for ");
-    Serial.print(commandedBurnTimeMillis);
+    Serial.print(commandedBurnTimeMicros);
     Serial.println(" microseconds.");
-    openedMillis = micros();
+    openedMicros = micros();
     digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
     timedPropel();  // Only sending "openedTime" because the function requires a number to be passed
