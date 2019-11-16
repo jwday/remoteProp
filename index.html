@@ -340,9 +340,11 @@ $("#turnrightButton").on("touchend mouseup", function() {
     client.publish('propel', 'turnoff', {qos: 2})
 })
 
+
+
 $("#sendButton").on("touchend mouseup", function() {
     timeIn = $("#timeInput").val();
-    client.publish('timedPropel', timeIn.toString())
+    client.publish('timedPropelInit', timeIn.toString())
 })
 
 

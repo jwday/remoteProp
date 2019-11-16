@@ -19,6 +19,12 @@ var path = require("path");
 var fs = require('fs');
 
 var record = false;
+var record_tail = false;
+var valve_open = false;
+
+var valve_open_time = 0;
+var valve_close_time = 0;
+
 var prop_data_array = [[Date()]];
 var float_data_array = [[Date()]];
 
@@ -58,56 +64,95 @@ broker.on('clientDisconnected', function(client) {
 broker.on('published', function(packet, client) {
     console.log('Published', packet.topic, packet.payload.toString());
 
-    // if topic = timedPropel && record = false
-        // record = true
-    // if record = true
-        // save the timestamp, packet.topic, and packet.payloadn to an array
-    // if topic = timedPropelReturn && record = true
-        // record = false
+    // Run this if recording, regardless of any other state
+    if (Boolean(record)==true) {
+        stopwatch = Date.now()-stopwatch_ref;  // Milliseconds
+        recordData(stopwatch, packet.topic, packet.payload)
+    };
 
-    if (packet.topic=="timedPropel" && Boolean(record)==false) {
-        record = true;
-        console.log('Recording data');
-        
+    // Burn phases:
+    // 1) 0.000s: Initilization command received from interface via broker, initiate recording
+    // 2) 0.500s: Send "fire" command
+    // 3) X.XXXs: "Fire complete" message received
+    // 4) X.XXX+2s: Stop recording
+
+
+    // If a "Fire" command is received and we're not recording or firing
+    if (packet.topic=="timedPropelInit" && Boolean(record)==false &&  Boolean(valve_open)==false) {     
         // Reset the data arrays in case they've already been filled from a previous recording
         prop_data_array = [[Date()]];
         float_data_array = [[Date()]];
 
-        // Append column names
-        prop_data_array.push(['Time (s)', 'Topic', 'Payload'])
-        float_data_array.push(['Time (s)', 'Topic', 'Payload'])
+        // Append column names to the data arrays
+        prop_data_array.push(['Time (s)', 'Prop Pressure (psig)'])
+        float_data_array.push(['Time (s)', 'Float Pressure (psig)'])
         
         stopwatch_ref = Date.now();
+        record = true;
+
+        console.log('Recording data');
+        console.log('Sending valve-open command in 0.5 seconds');
+
+        burn_time = packet.payload.toString();
+
+        setTimeout(function() {
+            valve_open = true;
+            valve_open_time = Date.now()-stopwatch_ref;  // Milliseconds
+
+            // Send the "fire" command
+            console.log('Sending valve-open command now');
+            broker.publish({topic: 'timedPropel', payload: burn_time, qos: 2});  // 'timedPropel' expects burn time to be in seconds
+        }, 500);
     };
 
-    if (Boolean(record)==true) {
-        stopwatch = Date.now()-stopwatch_ref;
-        if (packet.topic=="prop_pressure") {
-            prop_data_array.push([stopwatch/1000, packet.topic, parseFloat(packet.payload.toString()).toFixed(1)])
-        };
-        if (packet.topic=="float_pressure") {
-            float_data_array.push([stopwatch/1000, packet.topic, parseFloat(packet.payload.toString()).toFixed(1)])
-        };
-    };
 
-    if (packet.topic=="timedPropelReturn" && Boolean(record)==true) {
-        record = false;
-        console.log('Stopped recording data');
-        var filename = formatDateTime(Date())
-
-        fs.writeFile(__dirname + '/data/' + filename + '_prop_data.csv', arrayToCSV(prop_data_array), function(err) {
-            if(err) {
-                return console.log(err);
+    // If a "Completed firing" message is received and we're recording
+    if (packet.topic=="timedPropelReturn" && Boolean(record)==true  && Boolean(valve_open)==true && Boolean(record_tail)==false) {
+        // valve_close_time = Date.now()-stopwatch_ref;  // Milliseconds
+        valve_open = false;
+        console.log('Valve closed, recording data for 5 more seconds');
+        
+        setTimeout(function() {
+            record = false;
+            console.log('Stopped recording data');
+            var runtime = formatDateTime(Date())
+            var data_name = {prop_data: prop_data_array, float_data: float_data_array};
+    
+            for (const data in data_name) {
+                fs.writeFile(__dirname + '/data/' + runtime + '_' + data + '.csv', arrayToCSV(data_name[data]), function(err) {
+                    if(err) {
+                        return console.log(err);
+                    }
+                    else {
+                        console.log(data + ' was saved!');
+                    }
+                });
             }
-            console.log("Prop data was saved!");
-        });
+        }, 5000)
+    }
 
-        fs.writeFile(__dirname + '/data/' + filename + '_float_data.csv', arrayToCSV(float_data_array), function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            console.log("Float data was saved!");
-        });  
+
+
+    if (Boolean(record)==true && Boolean(valve_open)==false && (Date.now()-stopwatch_ref) >= ((burn_time*1000)+2000)) {
+
+
+        // fs.writeFile(__dirname + '/data/' + filename + '_prop_data.csv', arrayToCSV(prop_data_array), function(err) {
+        //     if(err) {
+        //         return console.log(err);
+        //     }
+        //     else {
+        //         console.log("Float data was saved!");
+        //     }
+        // });
+
+        // fs.writeFile(__dirname + '/data/' + filename + '_float_data.csv', arrayToCSV(float_data_array), function(err) {
+        //     if(err) {
+        //         return console.log(err);
+        //     }
+        //     else {
+        //         console.log("Float data was saved!");
+        //     }
+        // });
     };    
 });
 
@@ -120,26 +165,13 @@ function setup() {
 
 function arrayToCSV(twoDiArray) {
     //  Modified from: http://stackoverflow.com/questions/17836273/
-    //  export-javascript-data-to-csv-file-without-server-interaction
     var csvRows = [];
     for (var i = 0; i < twoDiArray.length; ++i) {
-        // for (var j = 0; j < twoDiArray[i].length; ++j) {
-        //     twoDiArray[i][j] = '\"' + twoDiArray[i][j] + '\"';  // Handle elements that contain commas
-        // }
         csvRows.push(twoDiArray[i].join(','));
     }
 
     var csvString = csvRows.join('\r\n');
     return csvString;
-
-    // var a         = document.createElement('a');
-    // a.href        = 'data:attachment/csv,' + csvString;
-    // a.target      = '_blank';
-    // a.download    = 'myFile.csv';
-
-    // document.body.appendChild(a);
-    // a.click();
-    // Optional: Remove <a> from <body> after done
 };
 
 
@@ -152,10 +184,36 @@ function formatDateTime(date) {
         minute = '' + d.getMinutes();
         second = '' + d.getSeconds(); 
 
-    if (month.length < 2) 
+    if (month.length < 2) {
         month = '0' + month;
-    if (day.length < 2) 
+    };
+        
+    if (day.length < 2) {
         day = '0' + day;
+    };
+
+    if (hour.length < 2) {
+        hour = '0' + hour;
+    }
+
+    if (minute.length < 2) {
+        minute = '0' + minute;
+    }
+
+    if (second.length < 2) {
+        second = '0' + second;
+    }
 
     return [year+month+day, hour+minute+second].join('_');
+}
+
+
+function recordData (time, topic, payload) {
+    if (topic=="prop_pressure") {
+        prop_data_array.push([time/1000, parseFloat(payload.toString()).toFixed(1)])
+    };
+
+    if (topic=="float_pressure") {
+        float_data_array.push([time/1000, parseFloat(payload.toString()).toFixed(1)])
+    };
 }
