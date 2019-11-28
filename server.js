@@ -27,6 +27,9 @@ var valve_close_time = 0;
 
 var prop_data_array = [[Date()]];
 var float_data_array = [[Date()]];
+var temp_data_array  = [[Date()]];
+var loadcell_data_array  = [[Date()]];
+
 
 
 
@@ -82,11 +85,17 @@ broker.on('published', function(packet, client) {
         // Reset the data arrays in case they've already been filled from a previous recording
         prop_data_array = [[Date()]];
         float_data_array = [[Date()]];
+        temp_data_array  = [[Date()]];
+        loadcell_data_array  = [[Date()]];
 
+			
         // Append column names to the data arrays
-        prop_data_array.push(['Time (s)', 'Prop Pressure (psig)'])
-        float_data_array.push(['Time (s)', 'Float Pressure (psig)'])
+        prop_data_array.push(['Time (s)', 'Prop Pressure (psig)']);
+        float_data_array.push(['Time (s)', 'Float Pressure (psig)']);
+        temp_data_array.push(['Time (s)', 'Exit Temperature (Celsius)']);
+        loadcell_data_array.push(['Time (s)', 'Weight (?)']);
         
+          
         stopwatch_ref = Date.now();
         record = true;
 
@@ -116,7 +125,8 @@ broker.on('published', function(packet, client) {
             record = false;
             console.log('Stopped recording data');
             var runtime = formatDateTime(Date())
-            var data_name = {prop_data: prop_data_array, float_data: float_data_array};
+            var data_name = {prop_data: prop_data_array, float_data: float_data_array, temp_data: temp_data_array, loadcell_data: loadcell_data_array};
+
     
             for (const data in data_name) {
                 fs.writeFile(__dirname + '/data/' + runtime + '_' + data + '.csv', arrayToCSV(data_name[data]), function(err) {
@@ -216,4 +226,15 @@ function recordData (time, topic, payload) {
     if (topic=="float_pressure") {
         float_data_array.push([time/1000, parseFloat(payload.toString()).toFixed(1)])
     };
+
+    if (topic=="exit_temp") {
+        temp_data_array.push([time/1000, parseFloat(payload.toString()).toFixed(1)])
+    }
+
+    if (topic=="loadcell_weight") {
+        loadcell_data_array.push([time/1000, parseFloat(payload.toString()).toFixed(1)])
+    }
 }
+
+
+
