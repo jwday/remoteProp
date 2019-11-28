@@ -1,1 +1,0 @@
-This is a test to see if this file can be served by the server and retrieved by a client.
