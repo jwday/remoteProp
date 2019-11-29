@@ -22,7 +22,7 @@ unsigned long previousMillis = 0;
 unsigned long previousMicros = 0;
 
 // Set the publish rate (in milliseconds) for publishing pressure values
-float pubRate = 100;
+float pubRate = 50;
 
 
 // Because I'm using a NodeMCU Amica microcontroller (which uses some other chipset), I
@@ -46,7 +46,7 @@ float pubRate = 100;
 #define MAXCS   16
 #define MAXCLK  2
 
-#define calibration_factor -70.500 //This value is obtained using the SparkFun_HX711_Calibration sketch
+#define calibration_factor -6522 //This value is obtained using the SparkFun_HX711_Calibration sketch
 
 #define LOADCELL_DOUT_PIN  14
 #define LOADCELL_SCK_PIN  12
@@ -69,7 +69,7 @@ void timedPropel() {
   if (currentMicros - openedMicros >= commandedBurnTimeMicros) {
     unsigned long actualBurnTime = currentMicros - openedMicros;
 //    digitalWrite(12, LOW);    // turn the LED off by making the voltage LOW
-    digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+//    digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
 //    digitalWrite(14, LOW);    // turn the LED off by making the voltage LOW
     digitalWrite(15, LOW);    // turn the LED off by making the voltage LOW
     holdOpenSwitch = false;
@@ -112,8 +112,8 @@ void connect() {
   // You need to set the IP address of the broker directly.
 
   // New IP Address, old one was 192.168.0.200
-//  client.begin("192.168.0.200", net);  // User for connecting via Apogee hotspot in the upstairs lab to Raspberry Pi
-   client.begin("192.168.43.68", net);  // Use for connecting via 4G tether to Raspberry Pi
+  client.begin("192.168.0.200", net);  // User for connecting via Apogee hotspot in the upstairs lab to Raspberry Pi
+//  client.begin("192.168.43.68", net);  // Use for connecting via 4G tether to Raspberry Pi
   // client.begin("192.168.43.106", net);  // Use for connecting via 4G tether to LCARS 
   
   while (!client.connect("propcontroller")) {
@@ -175,7 +175,7 @@ void messageReceived(String &topic, String &payload) {
     Serial.print(commandedBurnTimeMicros);
     Serial.println(" microseconds.");
     openedMicros = micros();
-//    digitalWrite(D5, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
 //    digitalWrite(D8, HIGH);   // turn the LED on (HIGH is the voltage level)
     timedPropel();  // Only sending "openedTime" because the function requires a number to be passed
   }
@@ -230,9 +230,14 @@ void loop() {
       adc_value2 = Wire.read();
       adc_value3 = Wire.read();
     }
-
-    float float_psi = adc_value0*0.478 + 3.91 - 14.8 - 1.54;
-    float prop_psi = adc_value1*0.478 + 3.91 - 14.8 - 0.10;
+    Serial.print("ADC 0: ");
+    Serial.print(adc_value0);
+    Serial.print("          ADC 1: ");
+    Serial.println(adc_value1);
+    // float float_psi = adc_value0*0.478 + 3.91 - 14.8 - 1.54;
+    // float prop_psi = adc_value1*0.478 + 3.91 - 14.8 - 0.10;
+    float float_psi = adc_value0*0.507614 - 13.9;
+    float prop_psi = adc_value1*0.507614 - 11.7;
 
     // Thermocouple
     float temp = thermocouple.readCelsius(); // Might have to change double to float if it doesn't work
