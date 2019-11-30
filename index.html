@@ -212,7 +212,7 @@
 <script>
 var client = mqtt.connect()
 
-client.subscribe(["float_pressure", "prop_pressure", "timedPropelReturn"]);
+client.subscribe(["float_pressure", "prop_pressure", "timedPropelReturn", "loadcell_weight"]);
 
 client.on('message', function (topic, message) {
 	if (topic == "float_pressure") {
