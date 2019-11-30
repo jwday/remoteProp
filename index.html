@@ -253,7 +253,7 @@ client.on('message', function (topic, message) {
     }
 
     else if (topic == "loadcell_weight") {
-		prop_psi = parseFloat(message.toString()).toFixed(1);
+		weight = parseFloat(message.toString()).toFixed(2);
 		$("#weight").text(weight);
     }   
 
