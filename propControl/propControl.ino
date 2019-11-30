@@ -46,7 +46,8 @@ float pubRate = 50;
 #define MAXCS   16
 #define MAXCLK  2
 
-#define calibration_factor -6522 //This value is obtained using the SparkFun_HX711_Calibration sketch
+// #define calibration_factor -6522 //This value is obtained using the SparkFun_HX711_Calibration sketch
+#define calibration_factor -7036
 
 #define LOADCELL_DOUT_PIN  14
 #define LOADCELL_SCK_PIN  12
@@ -195,6 +196,7 @@ void setup() {
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
   scale.set_scale(calibration_factor); //This value is obtained by using the SparkFun_HX711_Calibration sketch
   scale.tare();  //Assuming there is no weight on the scale at start up, reset the scale to 0
+
   
   connect();
   client.onMessage(messageReceived);
@@ -219,35 +221,37 @@ void loop() {
   if (currentMillis - previousMillis >= pubRate) {
     // Pressure XDCRs
     Wire.beginTransmission(PCF8591);  // Get data from the A2D Converter (PCF8591)
-    Wire.write(0x04); // Send a byte to the PCF8591 to tell it to read all channels
+//    Wire.write(0x04); // Send a byte to the PCF8591 to tell it to read all channels
+    Wire.write(0x00); // Read channel 0
+    Wire.write(0x01); // Read channel 1
     Wire.endTransmission();
-    Wire.requestFrom(PCF8591, 5); // Request one byte from the PCF8591, which should correspond to the reading of Channel 3
+    Wire.requestFrom(PCF8591, 3); // Request five bytes from the PCF8591, which should correspond to the reading of Channel 3
   
     while (Wire.available()) {
       adc_value0 = Wire.read(); //This needs two reads to get the value.
       adc_value0 = Wire.read();
       adc_value1 = Wire.read();
-      adc_value2 = Wire.read();
-      adc_value3 = Wire.read();
+//      adc_value2 = Wire.read();
+//      adc_value3 = Wire.read();
     }
-    Serial.print("ADC 0: ");
-    Serial.print(adc_value0);
-    Serial.print("          ADC 1: ");
-    Serial.println(adc_value1);
+//    Serial.print("ADC 0: ");
+//    Serial.print(adc_value0);
+//    Serial.print("          ADC 1: ");
+//    Serial.println(adc_value1);
     // float float_psi = adc_value0*0.478 + 3.91 - 14.8 - 1.54;
     // float prop_psi = adc_value1*0.478 + 3.91 - 14.8 - 0.10;
     float float_psi = adc_value0*0.507614 - 13.9;
-    float prop_psi = adc_value1*0.507614 - 11.7;
+    float prop_psi = adc_value1*0.507614 - 13.7;
 
     // Thermocouple
-    float temp = thermocouple.readCelsius(); // Might have to change double to float if it doesn't work
+    //float temp = thermocouple.readCelsius(); // Might have to change double to float if it doesn't work
 
     // Load Cell
     float weight = scale.get_units(); //scale.get_units() returns a float
 
     client.publish("float_pressure", String(float_psi));
     client.publish("prop_pressure", String(prop_psi));
-    client.publish("exit_temp", String(temp)); // Send through new topic
+//    client.publish("exit_temp", String(temp)); // Send through new topic
     client.publish("loadcell_weight", String(weight));
     
     previousMillis = currentMillis;
