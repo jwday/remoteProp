@@ -24,7 +24,7 @@ def all_data(prefix):
 
 
 
-test_no = "20191129_144055"
+test_no = "20191129_144330"
 test1441 = all_data(test_no)
 
 fig1, ax1 = plt.subplots(figsize=(8.5, 5), dpi=90)

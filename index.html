@@ -180,7 +180,8 @@
             </td>
             <td>
                 <div align="center">
-                    <div align="center">Prop PSI:</div><div id="prop_psi"></div>
+                    <!--div align="center">Prop PSI:</div><div id="prop_psi"></div-->
+                    <div align="center">Weight:</div><div id="weight"></div>
                 </div>
             </td>
         </tr>
@@ -249,8 +250,13 @@ client.on('message', function (topic, message) {
 			$("#prop_psi").css("background-color", "transparent")
 		}
 
-    } 
-    
+    }
+
+    else if (topic == "loadcell_weight") {
+		prop_psi = parseFloat(message.toString()).toFixed(1);
+		$("#weight").text(weight);
+    }   
+
     else if (topic == "timedPropelReturn") {
 		timeOn = parseFloat(message.toString())/1000000;
 		$("#timeReturn").text(timeOn);
