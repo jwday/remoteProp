@@ -23,36 +23,38 @@ def all_data(prefix):
 	return [data_float_psi, data_prop_psi, data_weight, data_temp]
 
 
-test_nos = ["20191130_131515"]
+test_nos = ["20191204_143449", "20191204_143735", "20191204_144142", "20191204_144715", "20191204_145400"]
+# test_nos = ["20191204_143735"]
+
+colors = []
 fig1, ax1 = plt.subplots(figsize=(6.5, 4), dpi=90)
 ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
-for test in test_nos:
+for trial, test in enumerate(test_nos):
 	test_data = all_data(test)
 
-	ax1.plot(test_data[0]['Time (s)'], test_data[0]['Float Pressure (psia)'], 
-		color='#1f77b4', 
-		label='Upstream Pres.', 
-		marker='x', 
-		markersize='10', 
-		linestyle='-', 
-		linewidth='1')
+	# ax1.plot(test_data[0]['Time (s)'], test_data[0]['Float Pressure (psia)'], 
+	# 	color='#1f77b4', 
+	# 	label='Upstream Pres.', 
+	# 	marker='x', 
+	# 	markersize='10', 
+	# 	linestyle='-', 
+	# 	linewidth='1')
 	ax1.plot(test_data[1]['Time (s)'], test_data[1]['Prop Pressure (psia)'], 
-		color='#2ca02c', 
+		# color='#2ca02c', 
 		label='Downstream Pres.', 
 		marker='+', 
 		markersize='10', 
 		linestyle='--', 
 		linewidth='1')
 
-
-	ax2.plot(test_data[2]['Time (s)'], test_data[2]['Thrust (mN)'], 
-		color='#ff7f0e', 
-		label='Thrust', 
-		marker='o',
-		fillstyle='none', 
-		linestyle='-', 
-		linewidth='1')
+	# ax2.plot(test_data[2]['Time (s)'], test_data[2]['Thrust (mN)'], 
+	# 	color='#ff7f0e', 
+	# 	label='Thrust', 
+	# 	marker='o',
+	# 	fillstyle='none', 
+	# 	linestyle='-', 
+	# 	linewidth='1')
 
 	# Blue: #1f77b4
 	# Orange: #ff7f0e
@@ -61,14 +63,14 @@ ax1.set_xlabel('Time (s)', color='#413839')
 ax1.set_ylabel('Pressure (psia)', color='#413839')
 ax2.set_ylabel('Thrust (mN)', color='#413839')
 
-ax1.set_xlim([0.5, 2.5])
+# ax1.set_xlim([0, 14])
 
 ax1.tick_params(colors='#413839')
 ax1.grid(which='major', axis='both', linestyle='--')
 box = ax1.get_position()
 ax1.set_position([box.x0, box.y0 + box.height*0.1, box.width, box.height*0.9])
 
-fig1.legend(loc='center', bbox_to_anchor=(0.5, 0.03), ncol=3, frameon=False )
+fig1.legend(loc='center', bbox_to_anchor=(0.5, 0.03), ncol=5, frameon=False )
 # plt.title('Single Plenum Discharge Pressure and Thrust ({1} mm Nozzle)'.format(test_nos,0.6), y=1.03, color='#413839')
 
 plt.show()
