@@ -127,6 +127,7 @@ for trial, test in enumerate(test_nos):
 
 td = pd.concat(td)
 td['Time (s)'] = td['Time (s)'].round(1)
-sns.lineplot(x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, ci=68, hue='Trial')
+sns.lineplot(x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, ci=68)
+
 
 plt.show()
