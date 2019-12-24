@@ -64,10 +64,11 @@ print('rho_1: ' + str(rho_1) + ' kg/m^3')
 print('')
 
 # Plot Data
-# test_nos = ["20191205_191138",  "20191205_191433"]
+# test_nos = ["20191204_143735", "20191204_143817", "20191204_143931"]  # 55 psia steady-state
+# test_nos = ["20191204_144142", "20191204_144207", "20191204_144256"] # 75 psia steady-state
+test_nos = ["20191204_144715", "20191204_144754", "20191204_144840"]  # 95 psia steady-state
 # test_nos = ["20191205_191138",  "20191205_191210",  "20191205_191332",  "20191205_191402",  "20191205_191433"]
-# test_nos = ["20191204_143735"]
-test_nos = ["20191223_183908", "20191223_183945", "20191223_183832", "20191223_183725", "20191223_183658"]
+# test_nos = ["20191223_183908", "20191223_183945", "20191223_183832", "20191223_183725", "20191223_183658"]
 
 colors = []
 fig1, ax1 = plt.subplots(figsize=(6.5, 4), dpi=90)
@@ -158,6 +159,6 @@ ax2.set_position([box.x0, box.y0 + box.height*0.1, box.width, box.height*0.9])
 # plt.legend(loc='upper left', bbox_to_anchor=(0.68, 0.95), ncol=1, frameon=False )
 plt.legend(loc='center', bbox_to_anchor=(0.6, -0.2), ncol=1, frameon=False )
 
-plt.title('Supply Pressure and Thrust (0.6 mm Nozzle)')
+plt.title('Supply Pressure and Thrust (0.4 mm Nozzle)')
 
 plt.show()
