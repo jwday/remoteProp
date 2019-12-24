@@ -127,6 +127,36 @@ for trial, test in enumerate(test_nos):
 
 td = pd.concat(td)
 td['Time (s)'] = td['Time (s)'].round(1)
-sns.lineplot(x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, ci=68, hue='Trial')
+sns.lineplot(x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, label='Pressure (psia)')
+
+# plt.legend(loc='upper left', bbox_to_anchor=(0.68, 1), ncol=1, frameon=False )
+plt.legend(loc='center', bbox_to_anchor=(0.3, -0.2), ncol=1, frameon=False )
+
+plt.tick_params(colors='#413839')
+plt.grid(which='major', axis='both', linestyle='--')
+
+
+
+
+ax2 = plt.twinx()  # instantiate a second axes that shares the same x-axis
+td = []
+
+for trial, test in enumerate(test_nos):
+	test_data = all_data(test)[2]
+	test_data["Trial"] = trial
+	td.append(test_data)
+
+td = pd.concat(td)
+td['Time (s)'] = td['Time (s)'].round(1)
+sns.lineplot(x=td['Time (s)'], y=td['Thrust (mN)'], color='Orange', data=td, ax=ax2, label='Thrust (mN)')
+
+
+box = ax2.get_position()
+ax2.set_position([box.x0, box.y0 + box.height*0.1, box.width, box.height*0.9])
+
+# plt.legend(loc='upper left', bbox_to_anchor=(0.68, 0.95), ncol=1, frameon=False )
+plt.legend(loc='center', bbox_to_anchor=(0.6, -0.2), ncol=1, frameon=False )
+
+plt.title('Supply Pressure and Thrust (0.6 mm Nozzle)')
 
 plt.show()
