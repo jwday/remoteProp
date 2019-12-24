@@ -65,8 +65,9 @@ print('')
 
 # Plot Data
 # test_nos = ["20191205_191138",  "20191205_191433"]
-test_nos = ["20191205_191138",  "20191205_191210",  "20191205_191332",  "20191205_191402",  "20191205_191433"]
+# test_nos = ["20191205_191138",  "20191205_191210",  "20191205_191332",  "20191205_191402",  "20191205_191433"]
 # test_nos = ["20191204_143735"]
+test_nos = ["20191223_183908", "20191223_183945", "20191223_183832", "20191223_183725", "20191223_183658"]
 
 colors = []
 fig1, ax1 = plt.subplots(figsize=(6.5, 4), dpi=90)
@@ -127,7 +128,6 @@ for trial, test in enumerate(test_nos):
 
 td = pd.concat(td)
 td['Time (s)'] = td['Time (s)'].round(1)
-<<<<<<< HEAD
 sns.lineplot(x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, label='Pressure (psia)')
 
 # plt.legend(loc='upper left', bbox_to_anchor=(0.68, 1), ncol=1, frameon=False )
@@ -159,9 +159,5 @@ ax2.set_position([box.x0, box.y0 + box.height*0.1, box.width, box.height*0.9])
 plt.legend(loc='center', bbox_to_anchor=(0.6, -0.2), ncol=1, frameon=False )
 
 plt.title('Supply Pressure and Thrust (0.6 mm Nozzle)')
-=======
-sns.lineplot(x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, ci=68)
-
->>>>>>> 91084b89a335dcf9dafa7f7d831151d5875c44f5
 
 plt.show()
