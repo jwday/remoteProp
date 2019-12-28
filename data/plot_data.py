@@ -6,19 +6,69 @@ import numpy as np
 import sys
 import seaborn as sns
 import os
+from scipy import signal
+
 
 def all_data(prefix):
 	data_float_psi = pd.read_csv('/home/josh/remoteProp/data/' + str(prefix + '_float_data.csv'), header=1)
 	data_float_psi.insert(2, "Float Pressure (psia)", [x+14.7 for x in data_float_psi["Float Pressure (psig)"]])
+	b, a = signal.butter(5, 0.5)
+	data_float_psi_filtered = signal.filtfilt(b, a, data_float_psi['Float Pressure (psig)'])
+	data_float_psi = pd.concat([data_float_psi, pd.DataFrame(data_float_psi_filtered, columns=['Float Pressure Filtered (psig)'])], axis=1)
+	tmax_float_psi = round(data_float_psi['Time (s)'].iloc[-1], 1)
+	# n_float_psi_resampled = int(tmax_float_psi*10 + 1)
+	n_all_resampled =int(tmax_float_psi*10 + 1)
+	tnew_float_psi = np.linspace(0, tmax_float_psi, n_all_resampled)
+	data_float_psi_resampled = signal.resample(data_float_psi['Float Pressure Filtered (psig)'], n_all_resampled)
+	# data_float_psi_resampled = signal.resample_poly(data_float_psi['Float Pressure (psig)'], 10, 9)
+	tnew_float_psi = np.linspace(0, tmax_float_psi, data_float_psi_resampled.size)
+	data_float_psi = pd.concat([data_float_psi, pd.DataFrame(np.transpose(np.array([tnew_float_psi, data_float_psi_resampled])), columns=['Time Resampled (s)', 'Float Pressure Resampled (psig)'])], axis=1)
+
 
 	data_prop_psi = pd.read_csv('/home/josh/remoteProp/data/' + str(prefix + '_prop_data.csv'), header=1)
 	data_prop_psi.insert(2, "Prop Pressure (psia)", [x+14.7 for x in data_prop_psi["Prop Pressure (psig)"]])
+	data_prop_psi_filtered = signal.filtfilt(b, a, data_prop_psi['Prop Pressure (psig)'])
+	data_prop_psi = pd.concat([data_prop_psi, pd.DataFrame(data_prop_psi_filtered, columns=['Prop Pressure Filtered (psig)'])], axis=1)
+	tmax_prop_psi = round(data_prop_psi['Time (s)'].iloc[-1], 1)
+	# n_prop_psi_resampled = int(tmax_prop_psi*10 + 1)
+	tnew_prop_psi = np.linspace(0, tmax_prop_psi, n_all_resampled)
+	data_prop_psi_resampled = signal.resample(data_prop_psi['Prop Pressure Filtered (psig)'], n_all_resampled)
+	# data_prop_psi_resampled = signal.resample_poly(data_prop_psi['Prop Pressure (psig)'], 10, 9)
+	tnew_prop_psi = np.linspace(0, tmax_prop_psi, data_prop_psi_resampled.size)
+	data_prop_psi = pd.concat([data_prop_psi, pd.DataFrame(np.transpose(np.array([tnew_prop_psi, data_prop_psi_resampled])), columns=['Time Resampled (s)', 'Prop Pressure Resampled (psig)'])], axis=1)
+
 
 	data_weight = pd.read_csv('/home/josh/remoteProp/data/' + str(prefix + '_loadcell_data.csv'), header=1)
-	data_weight.insert(2, "Thrust (mN)", [x*9.81 for x in data_weight["Weight (?)"]])
+	data_weight.insert(2, "Thrust (mN)", [x for x in data_weight["Weight (?)"]])
+	b, a = signal.butter(3, 0.85)
+	data_weight_filtered = signal.filtfilt(b, a, data_weight['Thrust (mN)'])
+	data_weight = pd.concat([data_weight, pd.DataFrame(data_weight_filtered, columns=['Thrust Filtered (mN)'])], axis=1)
+	tmax_weight = round(data_weight['Time (s)'].iloc[-1], 1)
+	# n_weight_resampled = int(tmax_weight*10 + 1)
+	tnew_weight = np.linspace(0, tmax_weight, n_all_resampled)
+	data_weight_resampled = signal.resample(data_weight['Thrust Filtered (mN)'], n_all_resampled)
+	# data_weight_resampled = signal.resample_poly(data_weight['Thrust (mN)'], 10, 9)
+	tnew_weight = np.linspace(0, tmax_weight, data_weight_resampled.size)
+	data_weight = pd.concat([data_weight, pd.DataFrame(np.transpose(np.array([tnew_weight, data_weight_resampled])), columns=['Time Resampled (s)', 'Thrust Resampled (mN)'])], axis=1)
+
+	thrust_corrected = []
+	for i, x in enumerate(data_weight['Thrust Resampled (mN)']):
+		thrust_corrected.append(x + (100 - data_float_psi['Float Pressure Filtered (psig)'][i])*(37.6/100))
+	data_weight = pd.concat([data_weight, pd.DataFrame(thrust_corrected, columns=['Thrust Corrected (mN)'])], axis=1)
+
 
 	data_temp = pd.read_csv('/home/josh/remoteProp/data/' + str(prefix + '_temp_data.csv'), header=1)
 	data_temp.insert(2, "Temperature (K)", [x+273.15 for x in data_temp["Exit Temperature (Celsius)"]])
+	data_temp_filtered = signal.filtfilt(b, a, data_temp['Temperature (K)'])
+	data_temp = pd.concat([data_temp, pd.DataFrame(data_temp_filtered, columns=['Temperature Filtered (K)'])], axis=1)
+	tmax_temp = round(data_temp['Time (s)'].iloc[-1], 1)
+	# n_temp_resampled = int(tmax_temp*10 + 1)
+	tnew_temp = np.linspace(0, tmax_temp, n_all_resampled)
+	data_temp_resampled = signal.resample(data_temp['Temperature Filtered (K)'], n_all_resampled)
+	# data_temp_resampled = signal.resample_poly(data_temp['Temperature (K)'], 10, 9)
+	tnew_temp = np.linspace(0, tmax_temp, data_temp_resampled.size)
+	data_temp = pd.concat([data_temp, pd.DataFrame(np.transpose(np.array([tnew_temp, data_temp_resampled])), columns=['Time Resampled (s)', 'Temperature Resampled (K)'])], axis=1)
+
 
 	return [data_float_psi, data_prop_psi, data_weight, data_temp]
 
@@ -81,6 +131,7 @@ print('')
 # test_nos = ["20191205_191138",  "20191205_191210",  "20191205_191332",  "20191205_191402",  "20191205_191433"]  # 115 psia steady-state
 
 test_nos = ["20191223_183908", "20191223_183945", "20191223_183832", "20191223_183725", "20191223_183658"]  # Plenum discharge
+test_nos = ["20191223_183908"]  # Plenum discharge
 
 colors = []
 fig1, ax1 = plt.subplots(figsize=(6.5, 4), dpi=90)
@@ -89,34 +140,41 @@ ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 for trial, test in enumerate(test_nos):
 	test_data = all_data(test)
 
-	ax1.plot(test_data[0]['Time (s)'], test_data[0]['Float Pressure (psia)'], 
+	ax1.plot(test_data[0]['Time (s)'], test_data[0]['Float Pressure (psig)'], 
+		# color='#2ca02c', 
+		label='Trial #' + str(trial+1) + ' Pres Raw.', 
+		# marker='+', 
+		markersize='10', 
+		linestyle='--', 
+		linewidth='1')
+	ax1.plot(test_data[0]['Time Resampled (s)'], test_data[0]['Float Pressure Resampled (psig)'], 
 		# color='#1f77b4', 
-		label='Trial #' + str(trial+1) + ' Pres.', 
-		marker='x', 
+		label='Trial #' + str(trial+1) + ' Pres. Resampled', 
+		# marker='x', 
 		markersize='10', 
 		linestyle='-', 
 		linewidth='1')
-	# ax1.plot(test_data[1]['Time (s)'], test_data[1]['Prop Pressure (psia)'], 
-	# 	# color='#2ca02c', 
-	# 	label='Downstream Pres.', 
-	# 	marker='+', 
-	# 	markersize='10', 
-	# 	linestyle='--', 
-	# 	linewidth='1')
 
-	ax2.plot(test_data[2]['Time (s)'], test_data[2]['Thrust (mN)'], 
-		# color='#ff7f0e', 
-		label='Trial #' + str(trial+1) + ' Thrust', 
-		marker='o',
-		fillstyle='none', 
-		linestyle='-', 
-		linewidth='1')
+	# ax2.plot(test_data[2]['Time (s)'], test_data[2]['Thrust (mN)'], 
+	# 	# color='#ff7f0e', 
+	# 	label='Trial #' + str(trial+1) + ' Thrust', 
+	# 	marker='o',
+	# 	fillstyle='none', 
+	# 	linestyle='-', 
+	# 	linewidth='1')		
+	# ax2.plot(test_data[2]['Time Resampled (s)'], test_data[2]['Thrust Resampled (mN)'], 
+	# 	# color='#ff7f0e', 
+	# 	label='Trial #' + str(trial+1) + ' Thrust', 
+	# 	marker='o',
+	# 	fillstyle='none', 
+	# 	linestyle='-', 
+	# 	linewidth='1')
 
 	# Blue: #1f77b4
 	# Orange: #ff7f0e
 	# Green: #2ca02c
 ax1.set_xlabel('Time (s)', color='#413839')
-ax1.set_ylabel('Pressure (psia)', color='#413839')
+ax1.set_ylabel('Pressure (psig)', color='#413839')
 ax2.set_ylabel('Thrust (mN)', color='#413839')
 
 ax1.set_xlim([0, 11])
@@ -129,19 +187,19 @@ ax1.set_position([box.x0, box.y0 + box.height*0.1, box.width, box.height*0.9])
 fig1.legend(loc='center', bbox_to_anchor=(0.5, 0.03), ncol=10, frameon=False )
 # plt.title('Single Plenum Discharge Pressure and Thrust ({1} mm Nozzle)'.format(test_nos,0.6), y=1.03, color='#413839')
 
-# plt.show()
+plt.show()
 
 plt.close('all')
 td = []
 
 for trial, test in enumerate(test_nos):
-	test_data = all_data(test)[0]
+	test_data = all_data(test)[0]  # All the Float Pressure data
 	test_data["Trial"] = trial
 	td.append(test_data)
 
 td = pd.concat(td)
 td['Time (s)'] = td['Time (s)'].round(1)
-sns.lineplot(x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, label='Pressure (psia)')
+sns.lineplot(x=td['Time Resampled (s)'], y=td['Float Pressure Resampled (psig)'], data=td, label='Pressure Resampled (psig)')
 
 # plt.legend(loc='upper left', bbox_to_anchor=(0.68, 1), ncol=1, frameon=False )
 plt.legend(loc='center', bbox_to_anchor=(0.3, -0.2), ncol=1, frameon=False )
@@ -150,19 +208,17 @@ plt.tick_params(colors='#413839')
 plt.grid(which='major', axis='both', linestyle='--')
 
 
-
-
 ax2 = plt.twinx()  # instantiate a second axes that shares the same x-axis
 td = []
 
 for trial, test in enumerate(test_nos):
-	test_data = all_data(test)[2]
+	test_data = all_data(test)[2]  # All the Thrust data
 	test_data["Trial"] = trial
 	td.append(test_data)
 
 td = pd.concat(td)
 td['Time (s)'] = td['Time (s)'].round(1)
-sns.lineplot(x=td['Time (s)'], y=td['Thrust (mN)'], color='Orange', data=td, ax=ax2, label='Thrust (mN)')
+sns.lineplot(x=td['Time Resampled (s)'], y=td['Thrust Corrected (mN)'], color='Orange', data=td, ax=ax2, label='Thrust Corrected (mN)')
 
 
 box = ax2.get_position()
