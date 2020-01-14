@@ -39,7 +39,7 @@ def all_data(prefix):
 
 
 	data_weight = pd.read_csv('/home/josh/remoteProp/data/' + str(prefix + '_loadcell_data.csv'), header=1)
-	data_weight.insert(2, "Thrust (mN)", [x for x in data_weight["Weight (?)"]])
+	data_weight.insert(2, "Thrust (mN)", [x*9.81 for x in data_weight["Weight (?)"]])
 	b, a = signal.butter(3, 0.85)
 	data_weight_filtered = signal.filtfilt(b, a, data_weight['Thrust (mN)'])
 	data_weight = pd.concat([data_weight, pd.DataFrame(data_weight_filtered, columns=['Thrust Filtered (mN)'])], axis=1)
@@ -57,21 +57,22 @@ def all_data(prefix):
 	data_weight = pd.concat([data_weight, pd.DataFrame(thrust_corrected, columns=['Thrust Corrected (mN)'])], axis=1)
 
 
-	data_temp = pd.read_csv('/home/josh/remoteProp/data/' + str(prefix + '_temp_data.csv'), header=1)
-	data_temp.insert(2, "Temperature (K)", [x+273.15 for x in data_temp["Exit Temperature (Celsius)"]])
-	data_temp_filtered = signal.filtfilt(b, a, data_temp['Temperature (K)'])
-	data_temp = pd.concat([data_temp, pd.DataFrame(data_temp_filtered, columns=['Temperature Filtered (K)'])], axis=1)
-	tmax_temp = round(data_temp['Time (s)'].iloc[-1], 1)
-	# n_temp_resampled = int(tmax_temp*10 + 1)
-	tnew_temp = np.linspace(0, tmax_temp, n_all_resampled)
-	data_temp_resampled = signal.resample(data_temp['Temperature Filtered (K)'], n_all_resampled)
-	# data_temp_resampled = signal.resample_poly(data_temp['Temperature (K)'], 10, 9)
-	tnew_temp = np.linspace(0, tmax_temp, data_temp_resampled.size)
-	data_temp = pd.concat([data_temp, pd.DataFrame(np.transpose(np.array([tnew_temp, data_temp_resampled])), columns=['Time Resampled (s)', 'Temperature Resampled (K)'])], axis=1)
+	# data_temp = pd.read_csv('/home/josh/remoteProp/data/' + str(prefix + '_temp_data.csv'), header=1)
+	# data_temp.insert(2, "Temperature (K)", [x+273.15 for x in data_temp["Exit Temperature (Celsius)"]])
+	# data_temp_filtered = signal.filtfilt(b, a, data_temp['Temperature (K)'])
+	# data_temp = pd.concat([data_temp, pd.DataFrame(data_temp_filtered, columns=['Temperature Filtered (K)'])], axis=1)
+	# tmax_temp = round(data_temp['Time (s)'].iloc[-1], 1)
+	# # n_temp_resampled = int(tmax_temp*10 + 1)
+	# tnew_temp = np.linspace(0, tmax_temp, n_all_resampled)
+	# data_temp_resampled = signal.resample(data_temp['Temperature Filtered (K)'], n_all_resampled)
+	# # data_temp_resampled = signal.resample_poly(data_temp['Temperature (K)'], 10, 9)
+	# tnew_temp = np.linspace(0, tmax_temp, data_temp_resampled.size)
+	# data_temp = pd.concat([data_temp, pd.DataFrame(np.transpose(np.array([tnew_temp, data_temp_resampled])), columns=['Time Resampled (s)', 'Temperature Resampled (K)'])], axis=1)
 
 
-	return [data_float_psi, data_prop_psi, data_weight, data_temp]
+	# return [data_float_psi, data_prop_psi, data_weight, data_temp]
 
+	return [data_float_psi, data_prop_psi, data_weight]
 
 # Calculate water hammer pressure spike
 dia_inner = 2.8/1000  # mm/1000 = m
@@ -128,10 +129,10 @@ print('')
 # test_nos = ["20191204_144142", "20191204_144207", "20191204_144256"]  # 75 psia steady-state
 # test_nos = ["20191204_144715", "20191204_144754", "20191204_144840"]  # 95 psia steady-state
 # test_nos = ["20191204_145400", "20191204_145419", "20191204_145442"]  # 115 psia steady-state
-# test_nos = ["20191205_191138",  "20191205_191210",  "20191205_191332",  "20191205_191402",  "20191205_191433"]  # 115 psia steady-state
+test_nos = ["20191205_191138",  "20191205_191210",  "20191205_191332",  "20191205_191402",  "20191205_191433"]  # 115 psia steady-state
 
-test_nos = ["20191223_183908", "20191223_183945", "20191223_183832", "20191223_183725", "20191223_183658"]  # Plenum discharge
-test_nos = ["20191223_183908"]  # Plenum discharge
+# test_nos = ["20191223_183908", "20191223_183945", "20191223_183832", "20191223_183725", "20191223_183658"]  # Plenum discharge
+# test_nos = ["20191223_183908"]  # Plenum discharge
 
 colors = []
 fig1, ax1 = plt.subplots(figsize=(6.5, 4), dpi=90)
@@ -187,9 +188,13 @@ ax1.set_position([box.x0, box.y0 + box.height*0.1, box.width, box.height*0.9])
 fig1.legend(loc='center', bbox_to_anchor=(0.5, 0.03), ncol=10, frameon=False )
 # plt.title('Single Plenum Discharge Pressure and Thrust ({1} mm Nozzle)'.format(test_nos,0.6), y=1.03, color='#413839')
 
-plt.show()
+# plt.show()
 
 plt.close('all')
+linewidth = 2
+fontsize = 12
+fig2, ax1 = plt.subplots(figsize=(5.75, 4), dpi=200)
+
 td = []
 
 for trial, test in enumerate(test_nos):
@@ -199,10 +204,10 @@ for trial, test in enumerate(test_nos):
 
 td = pd.concat(td)
 td['Time (s)'] = td['Time (s)'].round(1)
-sns.lineplot(x=td['Time Resampled (s)'], y=td['Float Pressure Resampled (psig)'], data=td, label='Pressure Resampled (psig)')
+sns.lineplot(ax=ax1, x=td['Time (s)'], y=td['Float Pressure (psia)'], data=td, label='Pressure (psia)', linewidth=linewidth)
 
 # plt.legend(loc='upper left', bbox_to_anchor=(0.68, 1), ncol=1, frameon=False )
-plt.legend(loc='center', bbox_to_anchor=(0.3, -0.2), ncol=1, frameon=False )
+plt.legend(loc='center', bbox_to_anchor=(0.2, -0.25), ncol=1, frameon=False )
 
 plt.tick_params(colors='#413839')
 plt.grid(which='major', axis='both', linestyle='--')
@@ -218,15 +223,20 @@ for trial, test in enumerate(test_nos):
 
 td = pd.concat(td)
 td['Time (s)'] = td['Time (s)'].round(1)
-sns.lineplot(x=td['Time Resampled (s)'], y=td['Thrust Corrected (mN)'], color='Orange', data=td, ax=ax2, label='Thrust Corrected (mN)')
+sns.lineplot(x=td['Time (s)'], y=td['Thrust (mN)'], color='Orange', data=td, ax=ax2, label='Thrust (mN)', linewidth=linewidth)
 
 
 box = ax2.get_position()
-ax2.set_position([box.x0, box.y0 + box.height*0.1, box.width, box.height*0.9])
+ax1.set_position([box.x0 + box.width * 0.03, box.y0 + box.height * 0.15, box.width * 0.95, box.height * 0.95])
+ax1.set_xlabel('Time, s', color='#413839', fontsize=fontsize)
+ax1.set_ylim
+ax1.set_ylabel('Pressure, psia', color='#413839', fontsize=fontsize)
+ax2.set_ylabel('Thrust, mN', color='#413839', fontsize=fontsize)
 
 # plt.legend(loc='upper left', bbox_to_anchor=(0.68, 0.95), ncol=1, frameon=False )
-plt.legend(loc='center', bbox_to_anchor=(0.6, -0.2), ncol=1, frameon=False )
+plt.legend(loc='center', bbox_to_anchor=(0.7, -0.25), ncol=1, frameon=False )
 
-plt.title('Supply Pressure and Thrust (0.4 mm Nozzle)')
+# plt.title('Supply Pressure and Thrust (0.6 mm Nozzle)')
+plt.savefig('/mnt/d/OneDrive - UC Davis/HRVIP/Writing/AIAA SciTech 2019 Paper/Images/Sim Results/image.png')
 
 plt.show()
