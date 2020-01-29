@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Display</title>
+    <script src="/mqtt.js"></script>
+    <script src="/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <script src="/js/bootstrap.min.js"></script>
+    
+    <style>        
+        body {
+            margin: 10px;
+            font: 15pt Menlo, Monaco, Consolas, "Courier New", monospace;
+            background-color: #e9ecef;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently supported by Chrome and Opera */
+        }
+
+        .button {
+            background-color: #008CBA; /* Blue */
+            border: none;
+            color: white;
+            padding: 25px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .linkButton {
+            background-color: brown; /* Blue */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;    
+        }
+
+        .readout {
+            font-size: 18px;
+        }
+
+        .button:active {
+            background-color: #f44336; /* Red */
+        }
+
+        table {
+            width: 90%;
+            max-width: 300px;
+            margin: auto;
+        }
+
+        td {
+            width: 50%;
+            position: relative;
+        }
+
+        td:after {
+            content: '';
+            display: block;
+            margin-top: 50%;
+        }
+
+        td .content {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: gold;
+        }
+
+        div {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body class="noselect">
+    <table border=1>
+        <!-- Row 1-->
+        <tr>
+            <td>
+                <div id="valve1Button" class="button">VLV 1</div><br><br>
+            </td>
+            <td>
+                <div id="valve2Button" class="button">VLV 2</div><br><br>
+            </td>
+        </tr>
+
+        <!-- Row 2-->
+        <tr>
+            <td>
+                <div id="valve3Button" class="button">VLV 3</div><br><br>
+            </td>
+            <td>
+                <div id="valve4Button" class="button">VLV 4</div><br><br>
+            </td>
+        </tr>
+
+        <!-- Row 3-->
+        <tr>
+            <td>
+                <div align="center" class="readout">ADC0 PSIG:</div><br><div id="float_psi"></div>
+            </td>
+            <td>
+                <div align="center" class="readout">ADC1 PSIG:</div><br><div id="prop_psi"></div>
+            </td>
+        </tr>
+    </table>
+
+    <table style="width:50%" border=0>
+        <tr>
+            <br>
+        </tr>
+        <tr>
+            <td>
+                <div align="center"><a href="/index.html" class="linkButton">Main Interface</a></div>
+            </td>            
+        </tr>
+    </table>
+
+</body>
+
+
+
+
+<script>
+var client = mqtt.connect()
+
+client.subscribe(["float_pressure", "prop_pressure"]);
+
+client.on('message', function (topic, message) {
+	if (topic == "float_pressure") {
+		float_psi = parseFloat(message.toString()).toFixed(1);
+		$("#float_psi").text(float_psi);
+        
+
+		if (float_psi >= 50 && float_psi < 70) {
+			$("#float_psi").css("background-color", "yellow")
+		}
+
+        else if (float_psi >= 70) {
+			$("#float_psi").css("background-color", "red")
+        }
+
+        else {
+			$("#float_psi").css("background-color", "transparent")
+		}
+
+    } 
+    
+    else if (topic == "prop_pressure") {
+		prop_psi = parseFloat(message.toString()).toFixed(1);
+		$("#prop_psi").text(prop_psi);
+
+		if (prop_psi >= 70 && prop_psi < 90) {
+			$("#prop_psi").css("background-color", "yellow")
+		}
+        
+        else if (prop_psi >= 90) {
+			$("#prop_psi").css("background-color", "red")
+        }
+        
+		else {
+			$("#prop_psi").css("background-color", "transparent")
+		}
+
+    }
+})
+
+
+
+
+
+$("#valve1Button").on("touchend mousedown", function() {
+    client.publish('singleValve', 'valve1On', {qos: 2})
+})
+$("#valve2Button").on("touchend mousedown", function() {
+    client.publish('singleValve', 'valve2On', {qos: 2})
+})
+$("#valve3Button").on("touchend mousedown", function() {
+    client.publish('singleValve', 'valve3On', {qos: 2})
+})
+$("#valve4Button").on("touchend mousedown", function() {
+    client.publish('singleValve', 'valve4On', {qos: 2})
+})
+
+
+$("#valve1Button").on("touchend mouseup", function() {
+    client.publish('singleValve', 'valve1Off', {qos: 2})
+})
+$("#valve2Button").on("touchend mouseup", function() {
+    client.publish('singleValve', 'valve2Off', {qos: 2})
+})
+$("#valve3Button").on("touchend mouseup", function() {
+    client.publish('singleValve', 'valve3Off', {qos: 2})
+})
+$("#valve4Button").on("touchend mouseup", function() {
+    client.publish('singleValve', 'valve4Off', {qos: 2})
+})
+
+
+
+</script>
+
+</html>

@@ -44,6 +44,18 @@
         font-size: 16px;    
     }
 
+    .linkButton {
+        background-color: brown; /* Blue */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;    
+    }
+
+
     .button:active {
         background-color: #f44336; /* Red */
     }
@@ -116,6 +128,12 @@
         right: 0;
         background: gold;
     }
+
+    .center {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+    }
     </style>
 </head>
 
@@ -172,7 +190,7 @@
         <tr>
             <td>
                 <div align="center">
-                    <div align="center">Float PSI:</div><div id="float_psi"></div>
+                    <div align="center">XDCR0 PSI:</div><div id="float_psi"></div>
                 </div>
             </td>
             <td>
@@ -180,8 +198,8 @@
             </td>
             <td>
                 <div align="center">
-                    <!--div align="center">Prop PSI:</div><div id="prop_psi"></div-->
-                    <div align="center">Weight:</div><div id="weight"></div>
+                    <div align="center">XDCR1 PSI:</div><div id="prop_psi"></div>
+                    <!-- <div align="center">Weight:</div><div id="weight"></div> -->
                 </div>
             </td>
         </tr>
@@ -201,6 +219,19 @@
             </td>            
         </tr>
     </table>
+
+    <table style="width:25%" border=0>
+        <tr>
+            <br>
+        </tr>
+        <tr>
+            <td>
+                <div align="center"><a href="/valveDebug.html" class="linkButton">Valve Debug Screen</a></div>
+            </td>            
+        </tr>
+    </table>
+
+
     <!--     <button id="hold">Hold</button><br><br>
     <input id="amount" value=200 type="tel" pattern="[0-9]*" novalidate width=50> ms<br>
     <button id="timed">Timed</button> -->

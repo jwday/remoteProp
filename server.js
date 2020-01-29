@@ -29,6 +29,7 @@ var prop_data_array = [[Date()]];
 var float_data_array = [[Date()]];
 var temp_data_array  = [[Date()]];
 var loadcell_data_array  = [[Date()]];
+// var all_data_array  = [[Date()]];
 
 
 
@@ -87,6 +88,7 @@ broker.on('published', function(packet, client) {
         float_data_array = [[Date()]];
         temp_data_array  = [[Date()]];
         loadcell_data_array  = [[Date()]];
+        // all_data_array = [[Date()]];
 
 			
         // Append column names to the data arrays
@@ -94,7 +96,7 @@ broker.on('published', function(packet, client) {
         float_data_array.push(['Time (s)', 'Float Pressure (psig)']);
         temp_data_array.push(['Time (s)', 'Exit Temperature (Celsius)']);
         loadcell_data_array.push(['Time (s)', 'Weight (?)']);
-        
+        // all_data_array.push(['Time (s)', 'Prop Pressure (psig)', 'Float Pressure (psig)', 'Exit Temperature (Celsius)', 'Weight (?)'])
           
         stopwatch_ref = Date.now();
         record = true;
