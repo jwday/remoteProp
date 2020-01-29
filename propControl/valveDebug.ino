@@ -173,9 +173,9 @@ void loop() {
   delay(10);  // <- fixes some issues with WiFi stability
 
   if (!client.connected()) {
-	digitalWrite(12, LOW); // Auto shutoff the valves if client is not connected
+	  digitalWrite(12, LOW); // Auto shutoff the valves if client is not connected
     digitalWrite(13, LOW);
-	digitalWrite(14, LOW);
+	  digitalWrite(14, LOW);
     digitalWrite(15, LOW);
     connect(); // Attempt to connect
   }
