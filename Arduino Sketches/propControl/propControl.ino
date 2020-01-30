@@ -175,10 +175,6 @@ void setup() {
   
   Serial.begin(9600);
   Wire.begin();
-  
-  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-  scale.set_scale(calibration_factor); //This value is obtained by using the SparkFun_HX711_Calibration sketch
-  scale.tare();  //Assuming there is no weight on the scale at start up, reset the scale to 0
 
   connect();
   client.onMessage(messageReceived);
