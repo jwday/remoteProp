@@ -138,12 +138,13 @@ void messageReceived(String &topic, String &payload) {
       digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
 	    digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
     }
-    else (payload == "turnoff") {
+    else if (payload == "turnoff") {
 	    digitalWrite(12, LOW);    // turn the LED off by making the voltage LOW
       digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
 	    digitalWrite(14, LOW);    // turn the LED off by making the voltage LOW
       digitalWrite(15, LOW);    // turn the LED off by making the voltage LOW
     }
+  }
 
   // Valve Debug
   if (topic == "singleValve") {
