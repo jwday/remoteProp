@@ -113,41 +113,67 @@ void connect() {
 void messageReceived(String &topic, String &payload) {
   Serial.println("incoming: " + topic + " - " + payload);
 
-  if (topic == "propel" && payload == "fwd") {
-	digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-    digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
-  }
+  if (topic == "propel") {
+    if (payload == "fwd") {
+  	  digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
+      digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "bckwd") {
+	    digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
+      digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "panright") {
+	    digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
+	    digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "panleft") {
+      digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+      digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "turnleft") {
+	    digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
+      digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "turnright") {
+      digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+	    digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else (payload == "turnoff") {
+	    digitalWrite(12, LOW);    // turn the LED off by making the voltage LOW
+      digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+	    digitalWrite(14, LOW);    // turn the LED off by making the voltage LOW
+      digitalWrite(15, LOW);    // turn the LED off by making the voltage LOW
+    }
 
-  else if (topic == "propel" && payload == "bckwd") {
-	digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
-    digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
-  }
+  // Valve Debug
+  if (topic == "singleValve") {
+    // Valve ON
+    if (payload == "valve1On") {  
+	    digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "valve2On") {
+	    digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "valve3On") {
+	    digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
+    else if (payload == "valve4On") {
+      digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
+    }
 
-  else if (topic == "propel" && payload == "panright") {
-	digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-	digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
-  }
-
-  else if (topic == "propel" && payload == "panleft") {
-    digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
-    digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
-  }
-
-  else if (topic == "propel" && payload == "turnleft") {
-	digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-    digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
-  }
-
-  else if (topic == "propel" && payload == "turnright") {
-    digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
-	digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
-  }
-  
-  else if (topic == "propel" && payload == "turnoff") {
-	digitalWrite(12, LOW);    // turn the LED off by making the voltage LOW
-    digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
-	digitalWrite(14, LOW);    // turn the LED off by making the voltage LOW
-    digitalWrite(15, LOW);    // turn the LED off by making the voltage LOW
+    // Valve OFF
+    else if (payload == "valve1Off") {
+	    digitalWrite(12, LOW);    // turn the LED off by making the voltage LOW
+    }
+    else if (payload == "valve2Off") {
+      digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+    }
+    else if (payload == "valve3Off") {
+	    digitalWrite(14, LOW);    // turn the LED off by making the voltage LOW
+    }
+    else if (payload == "valve4Off") {
+      digitalWrite(15, LOW);    // turn the LED off by making the voltage LOW
+    }
   }
 
   if (topic == "timedPropel") {
@@ -157,9 +183,9 @@ void messageReceived(String &topic, String &payload) {
     Serial.print(commandedBurnTimeMicros);
     Serial.println(" microseconds.");
     openedMicros = micros();
-	digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-	digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
-	digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
+	  digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
+	  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+	  digitalWrite(14, HIGH);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(15, HIGH);   // turn the LED on (HIGH is the voltage level)
     timedPropel();  // Only sending "openedTime" because the function requires a number to be passed
   }

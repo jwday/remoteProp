@@ -197,16 +197,16 @@ client.on('message', function (topic, message) {
 
 
 
-$("#valve1Button").on("touchend mousedown", function() {
+$("#valve1Button").on("touchstart mousedown", function() {
     client.publish('singleValve', 'valve1On', {qos: 2})
 })
-$("#valve2Button").on("touchend mousedown", function() {
+$("#valve2Button").on("touchstart mousedown", function() {
     client.publish('singleValve', 'valve2On', {qos: 2})
 })
-$("#valve3Button").on("touchend mousedown", function() {
+$("#valve3Button").on("touchstart mousedown", function() {
     client.publish('singleValve', 'valve3On', {qos: 2})
 })
-$("#valve4Button").on("touchend mousedown", function() {
+$("#valve4Button").on("touchstart mousedown", function() {
     client.publish('singleValve', 'valve4On', {qos: 2})
 })
 
