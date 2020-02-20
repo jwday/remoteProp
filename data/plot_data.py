@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
 from scipy import stats
+from scipy import signal
 import math
 import pandas as pd
 import numpy as np
 import sys
 import seaborn as sns
 import os
-from scipy import signal
 
 
 def all_data(prefix):
