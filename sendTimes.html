@@ -105,8 +105,8 @@
     var client = mqtt.connect()
 
     $("#sendButton").on("touchend mouseup", function() {
-        timeIn = $("#timeInput").val();
-        client.publish('timeOnReturn', timeIn.toString())
+        timeIn = $("#timeInput").val()*1000000;
+        client.publish('timedPropelReturn', timeIn.toString())
     })
 
 </script>

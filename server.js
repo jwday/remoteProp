@@ -1,18 +1,19 @@
-var mosca = require('mosca');
-
-var backendSettings = {
-    type: 'mongo',
-    url: 'mongodb://localhost:27017/mqtt',
-    pubsubCollection: 'ascoltatori',
-    mongo: {}
-};
+var mosca = require('mosca');  // This is the MQTT Broker (the thing that receives messages and publishes them to specific topics)
 
 var moscaSettings = {
     port: 1883,
     backend: backendSettings
 };
 
-var express = require("express");
+var backendSettings = {  // This is the database. Not really needed at this moment but can be useful for storing
+    type: 'mongo',
+    url: 'mongodb://localhost:27017/mqtt',
+    pubsubCollection: 'ascoltatori',
+    mongo: {}
+};
+
+var express = require("express");  // This is the Node.js framework that provides all the functions to make this server work
+
 var serveIndex = require('serve-index')
 var http = require("http");
 var path = require("path");
