@@ -15,6 +15,7 @@ unsigned long openedMicros;  // The time at which the valve was commanded to be 
 // Set the publish rate (in milliseconds) for publishing pressure values
 float pubRate = 100;
 int sensorValue = 0;
+int valveID = 0;
 
 // Variables for timekeeping while performing "parallel" processes
 unsigned long currentMillis;
@@ -94,7 +95,7 @@ void connect() {
 
 void messageReceived(String &topic, String &payload) {
     Serial.println("incoming: " + topic + " - " + payload);
-    valveID = toInt(payload);
+    valveID = payload.toInt();
     // Valve ON
     if (topic == "singleValveOn") {
         mcp.digitalWrite(valveID, HIGH);   // turn the LED on (HIGH is the voltage level)
