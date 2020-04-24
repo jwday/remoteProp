@@ -110,23 +110,56 @@
             <td>
                 <div id="valve2Button" class="button">VLV 2</div><br><br>
             </td>
+            <td>
+                <div id="valve3Button" class="button">VLV 3</div><br><br>
+            </td>
         </tr>
 
         <!-- Row 2-->
         <tr>
             <td>
-                <div id="valve3Button" class="button">VLV 3</div><br><br>
+                <div id="valve4Button" class="button">VLV 4</div><br><br>
             </td>
             <td>
-                <div id="valve4Button" class="button">VLV 4</div><br><br>
+                <div id="valve5Button" class="button">VLV 5</div><br><br>
+            </td>
+            <td>
+                <div id="valve6Button" class="button">VLV 6</div><br><br>
             </td>
         </tr>
 
         <!-- Row 3-->
         <tr>
             <td>
+                <div id="valve7Button" class="button">VLV 7</div><br><br>
+            </td>
+            <td>
+                <div id="valve8Button" class="button">VLV 8</div><br><br>
+            </td>
+            <td>
+                <div id="valve9Button" class="button">VLV 9</div><br><br>
+            </td>
+        </tr>
+
+        <!-- Row 4-->
+        <tr>
+            <td>
+                <div id="valve10Button" class="button">VLV 10</div><br><br>
+            </td>
+            <td>
+                <div id="valve11Button" class="button">VLV 11</div><br><br>
+            </td>
+            <td>
+                <div id="valve12Button" class="button">VLV 12</div><br><br>
+            </td>
+        </tr>
+
+        <!-- Row 5-->
+        <tr>
+            <td>
                 <div align="center" class="readout">ADC0 PSIG:</div><br><div id="float_psi"></div>
             </td>
+            <td></td>
             <td>
                 <div align="center" class="readout">ADC1 PSIG:</div><br><div id="prop_psi"></div>
             </td>
@@ -198,32 +231,80 @@ client.on('message', function (topic, message) {
 
 
 $("#valve1Button").on("touchstart mousedown", function() {
-    client.publish('singleValve', 'valve1On', {qos: 2})
+    client.publish('singleValveOn', '1', {qos: 2})
 })
 $("#valve2Button").on("touchstart mousedown", function() {
-    client.publish('singleValve', 'valve2On', {qos: 2})
+    client.publish('singleValveOn', '2', {qos: 2})
 })
 $("#valve3Button").on("touchstart mousedown", function() {
-    client.publish('singleValve', 'valve3On', {qos: 2})
+    client.publish('singleValveOn', '3', {qos: 2})
 })
 $("#valve4Button").on("touchstart mousedown", function() {
-    client.publish('singleValve', 'valve4On', {qos: 2})
+    client.publish('singleValveOn', '4', {qos: 2})
+})
+$("#valve5Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '5', {qos: 2})
+})
+$("#valve6Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '6', {qos: 2})
+})
+$("#valve7Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '7', {qos: 2})
+})
+$("#valve8Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '8', {qos: 2})
+})
+$("#valve9Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '9', {qos: 2})
+})
+$("#valve10Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '10', {qos: 2})
+})
+$("#valve11Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '11', {qos: 2})
+})
+$("#valve12Button").on("touchstart mousedown", function() {
+    client.publish('singleValveOn', '12', {qos: 2})
 })
 
 
-$("#valve1Button").on("touchend mouseup", function() {
-    client.publish('singleValve', 'valve1Off', {qos: 2})
-})
-$("#valve2Button").on("touchend mouseup", function() {
-    client.publish('singleValve', 'valve2Off', {qos: 2})
-})
-$("#valve3Button").on("touchend mouseup", function() {
-    client.publish('singleValve', 'valve3Off', {qos: 2})
-})
-$("#valve4Button").on("touchend mouseup", function() {
-    client.publish('singleValve', 'valve4Off', {qos: 2})
-})
 
+$("#valve1Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '1', {qos: 2})
+})
+$("#valve2Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '2', {qos: 2})
+})
+$("#valve3Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '3', {qos: 2})
+})
+$("#valve4Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '4', {qos: 2})
+})
+$("#valve5Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '5', {qos: 2})
+})
+$("#valve6Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '6', {qos: 2})
+})
+$("#valve7Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '7', {qos: 2})
+})
+$("#valve8Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '8', {qos: 2})
+})
+$("#valve9Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '9', {qos: 2})
+})
+$("#valve10Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '10', {qos: 2})
+})
+$("#valve11Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '11', {qos: 2})
+})
+$("#valve12Button").on("touchstart mouseup", function() {
+    client.publish('singleValveOff', '12', {qos: 2})
+})
 
 
 </script>

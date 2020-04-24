@@ -102,7 +102,7 @@ void connect() {
 
   // New IP Address, old one was 192.168.0.200
   client.begin("192.168.0.200", net);  // User for connecting via Apogee hotspot in the upstairs lab to Raspberry Pi
-//  client.begin("192.168.43.68", net);  // Use for connecting via 4G tether to Raspberry Pi
+//  client.begin("192.168.43.35", net);  // Use for connecting via 4G tether to Raspberry Pi
   // client.begin("192.168.43.106", net);  // Use for connecting via 4G tether to LCARS 
   
   while (!client.connect("propcontroller")) {
