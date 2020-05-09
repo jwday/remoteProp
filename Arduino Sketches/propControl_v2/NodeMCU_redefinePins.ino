@@ -10,7 +10,7 @@
 #define D3 0  // Data out pin (DO) for thermocouple
 #define D4 2  // Same as "LED_BUILTIN", but inverted logic
 #define D5 14 // SPI Bus SCK (clock)
-#define D6 12 // SPI Bus MISO NOT WORKING
+#define D6 12 // SPI Bus MISO
 #define D7 13 // SPI Bus MOSI 
 #define D8 15 // SPI Bus SS (CS)
 #define D9 3  // RX0 (Serial console)

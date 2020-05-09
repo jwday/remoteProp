@@ -31,8 +31,8 @@ const char ip_address[] = "192.168.43.35";  // Via celluar hotspot to Raspberry 
 
 // Variables for controlling pressure XDCR publish rate, ADC read variables, and ADC timing variables
 float pubRate = 100;
-int adc_value0;
-int adc_value1;
+unsigned int adc_value0;
+unsigned int adc_value1;
 unsigned long adc_read_pre;
 unsigned long adc_read_post;
 unsigned long adc_readTime;
@@ -53,15 +53,17 @@ unsigned long currentMillis;
 unsigned long currentMicros;
 unsigned long previousMillis = 0;
 unsigned long previousMicros = 0;
-int n = 0;
+int n = 1;
 unsigned long averageTime = 0;
 unsigned long sampleTime;
+unsigned long average_adc = 0;
+unsigned long adc_value;
 
 
 // Instantiate all the required objects
 WiFiClient net;             // Instantiate a WiFiClient object, call it "net"
 MQTTClient client;          // Instantiate an MQTTClient object, call it "client"
-MCP3008 adc;                // Instantiate an MCP3008 ADC object, assuming it's connected to the default pins D5, D6, D7, D8, call it "adc"
+MCP3002 adc;                // Instantiate an MCP3008 ADC object, assuming it's connected to the default pins D5, D6, D7, D8, call it "adc"
 Adafruit_MCP23017 GPIO_IC;  // Instantiate an MCP23017 GPIO Expansion object
 
 
@@ -159,6 +161,7 @@ void setup() {
     
     Serial.begin(9600);
     Wire.begin();
+    adc.begin();
     
 //     Set up MCP23017. 
 //          A0  A1  A2  Address
@@ -181,12 +184,21 @@ void setup() {
 
 void avgSampleFreq(float sampleTime) {
     averageTime = (averageTime*(n-1) + sampleTime)/n;
-    if (n >= 200) {
-        Serial.print("Average loop rate (");
-        Serial.print(n);
-        Serial.print(" loops): ");
-        Serial.print(1000000.0/averageTime);
-        Serial.println(" Hz");
+    if (n >= 20) {
+        Serial.print("Average loop time (" + String(n) + " loops): ");
+        Serial.print(String(averageTime) + " us");
+        Serial.println(" (" + String(1000000.0/averageTime) + " Hz)");
+        n = 0;
+    }
+    n++;
+}
+
+
+void avgPressure(float adc_value) {
+    average_adc = (average_adc*(n-1) + adc_value)/n;
+    if (n >= 20) {
+        Serial.print("Average adc (" + String(n) + " loops): ");
+        Serial.println(String(average_adc));
         n = 0;
     }
     n++;
@@ -194,12 +206,11 @@ void avgSampleFreq(float sampleTime) {
 
 
 void loop() {
-    // This loop takes ~10.060ms to complete when not reading from ADC (~100 Hz)
-    // Add an additional 1.5 to 2ms to include ADC time (~82 Hz)
-    // Most of this is caused by the delay() function below
+    // This loop takes ~10.2 ms to complete when reading from ADC (~98 Hz) when delay = 10
+    // This loop takes ~5.13 ms to complete when reading from ADC (~195 Hz) when delay = 5
     adc_read_pre = micros();
     client.loop();
-    delay(5);  // <- fixes some issues with WiFi stability, but absolutely kills the sample rate
+    delay(5);  // <- fixes some issues with WiFi stability, but kills the sample rate
 
     if (!client.connected()) {
         for (int i=0; i<15; i++) {
@@ -211,27 +222,28 @@ void loop() {
     currentMillis = millis();
 
     if (currentMillis - previousMillis >= pubRate) {
-        // This loop takes ~1.5 to 2ms to complete (~500 to 660 Hz)
-        // Pressure XDCRs
-
+        // This loop takes ~1.2 ms to complete (~830 Hz)
         
+        // Pressure XDCRs
         adc_value0 = adc.analogRead(0);  // Float pressure
         adc_value1 = adc.analogRead(1);  // Prop pressure
 
-        // 0 PSIG
-        // ADC0 = 26  ADC1 = 22
-        // 100 PSIG
-        // ADC0 = 221  ADC1 = 217
+        // ADC0:    0 PSIG: 92      100PSIG: YYY
+        // ADC1:    0 PSIG: XX      100PSIG: YYY
 
-        // ADC0: 100/(221-26) = 0.51282
-        // ADC1: 100/(217-22) = 0.51282
-        float float_psig = (adc_value0 - 26) * 0.51282;
-        float prop_psig = (adc_value1 - 22) * 0.51282;
+        // ADC0: 100/(YYY-93) = 0.51282
+        // ADC1: 100/(YYY-XX) = 0.51282
+        float float_psig = (adc_value0 - 104) * 0.128205;
+        float prop_psig = (adc_value1 - 88) * 0.124844;
 
-        client.publish("float_pressure", String(float_psig));
-        client.publish("prop_pressure", String(prop_psig));
+        client.publish("float_pressure", String(adc_value0));
+        client.publish("prop_pressure", String(adc_value1));
+
+        Serial.println("float_pressure: " + String(adc_value0));
+//        Serial.printlnMAM("     prop_pressure:" + String(adc_value1));        
 
         previousMillis = currentMillis;
+//        avgPressure(adc_value0);
     }
 
     if (holdOpenSwitch) {
@@ -240,5 +252,5 @@ void loop() {
     
     adc_read_post = micros();
     adc_readTime = adc_read_post - adc_read_pre;
-    avgSampleFreq(adc_readTime);
+//    avgSampleFreq(adc_readTime);
 }
