@@ -1,3 +1,4 @@
+// SERVER SETTINGS
 var mosca = require('mosca');  // This is the MQTT Broker (the thing that receives messages and publishes them to specific topics)
 
 var moscaSettings = {
@@ -19,6 +20,8 @@ var http = require("http");
 var path = require("path");
 var fs = require('fs');
 
+
+// SWITCH VARIABLES AND DATA ARRAYS
 var record = false;
 var record_tail = false;
 var valve_open = false;
@@ -33,8 +36,7 @@ var loadcell_data_array  = [[Date()]];
 // var all_data_array  = [[Date()]];
 
 
-
-
+// START SERVER
 var app = express();
 var srv = http.createServer(app);
 var broker = new mosca.Server(moscaSettings);
@@ -53,19 +55,22 @@ app.get("/", function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-
-
 srv.listen(3000);
 
+
+
+// MANAGE CLIENTS
 broker.on('clientConnected', function(client) {
     console.log('client connected', client.id);
 });
 
-broker.on('clientDisconnected', function(client) {
+broker.on('clientDisconnected', function(client) {  // Failsafe to close all valves in case client disconnects
     broker.publish({topic: 'propel', payload: 'turnoff', qos: 2})
 });
 
-// fired when a message is received
+
+
+// MESSAGE RECEIVED
 broker.on('published', function(packet, client) {
     console.log('Published', packet.topic, packet.payload.toString());
 
