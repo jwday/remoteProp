@@ -1,12 +1,14 @@
 // SERVER SETTINGS
-var mosca = require('mosca');  // This is the MQTT Broker (the thing that receives messages and publishes them to specific topics)
+var mosca = require('mosca'); 	// This is the MQTT Broker (the thing that receives messages and publishes them to specific topics)
+								// It is being set up as a Node.js app (as opposed to running it standalone)
+								// NOTE: MOSCA IS UNMAINTAINED. Per https://github.com/moscajs/mosca, they suggest moving to Aedes
 
-var moscaSettings = {
-    port: 1883,
+var moscaSettings = {			// This is where/how you set up the Mosca (MQTT Broker) settings
+    port: 1883,					// Default port is 1883. Make sure it's open on your router.
     backend: backendSettings
 };
 
-var backendSettings = {  // This is the database. Not really needed at this moment but can be useful for storing
+var backendSettings = { 		// This is the database. Not really needed at this moment but can be useful for storing
     type: 'mongo',
     url: 'mongodb://localhost:27017/mqtt',
     pubsubCollection: 'ascoltatori',
@@ -39,7 +41,7 @@ var loadcell_data_array  = [[Date()]];
 // START SERVER
 var app = express();
 var srv = http.createServer(app);
-var broker = new mosca.Server(moscaSettings);
+var broker = new mosca.Server(moscaSettings);	// Init the Mosca MQTT broker
 broker.attachHttpServer(srv);
 
 app.use(express.static(path.dirname(require.resolve("mosca")) + "/public"));
