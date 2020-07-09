@@ -25,7 +25,7 @@
 const char ssid[] = "Apogee";
 const char pass[] = "PerformHumanSimulator";
 //const char ip_address[] = "192.168.43.35";  // Via celluar hotspot to Raspberry Pi broker
-const char ip_address[] = "192.168.0.200";  // Via access point in upstairs lab to Raspberry Pi broker
+const char ip_address[] = "192.168.0.200";  // Via Apogee to Raspberry Pi broker
 //const char ip_address[] = "192.168.43.106"; // Via cellular hotspot to LCARS broker
 
 
