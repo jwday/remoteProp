@@ -228,16 +228,16 @@ void loop() {
         adc_value0 = adc.analogRead(0);  // Float pressure
         adc_value1 = adc.analogRead(1);  // Prop pressure
 
-        // ADC0:    0 PSIG: 92      100PSIG: YYY
-        // ADC1:    0 PSIG: XX      100PSIG: YYY
+        // ADC0:    0 PSIG: 82      100PSIG: 782
+        // ADC1:    0 PSIG: 98      100PSIG: 788
 
-        // ADC0: 100/(YYY-93) = 0.51282
-        // ADC1: 100/(YYY-XX) = 0.51282
-        float float_psig = (adc_value0 - 104) * 0.128205;
-        float prop_psig = (adc_value1 - 88) * 0.124844;
+        // ADC0: 100/(782-82) = 0.14286
+        // ADC1: 100/(788-98) = 0.14492
+        float float_psig = (adc_value0 - 92) * 0.14430;
+        float prop_psig = (adc_value1 - 88) * 0.14492;
 
-        client.publish("float_pressure", String(adc_value0));
-        client.publish("prop_pressure", String(adc_value1));
+        client.publish("float_pressure", String(float_psig));
+        client.publish("prop_pressure", String(prop_psig));
 
         Serial.println("float_pressure: " + String(adc_value0));
 //        Serial.printlnMAM("     prop_pressure:" + String(adc_value1));        
