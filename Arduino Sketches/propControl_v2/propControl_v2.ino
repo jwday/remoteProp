@@ -31,8 +31,8 @@ const char ip_address[] = "192.168.0.200";  // Via Apogee to Raspberry Pi broker
 
 // Variables for controlling pressure XDCR publish rate, ADC read variables, and ADC timing variables
 float pubRate = 100;
-unsigned int adc_value0;
-unsigned int adc_value1;
+int adc_value0;
+int adc_value1;
 unsigned long adc_read_pre;
 unsigned long adc_read_post;
 unsigned long adc_readTime;
@@ -233,14 +233,14 @@ void loop() {
 
         // ADC0: 100/(782-82) = 0.14286
         // ADC1: 100/(788-98) = 0.14492
-        float float_psig = (adc_value0 - 92) * 0.14430;
-        float prop_psig = (adc_value1 - 88) * 0.14492;
+        float float_psig = (adc_value0 - 82) * 0.14286;
+        float prop_psig = (adc_value1 - 98) * 0.14492;
 
         client.publish("float_pressure", String(float_psig));
         client.publish("prop_pressure", String(prop_psig));
 
-        Serial.println("float_pressure: " + String(adc_value0));
-//        Serial.printlnMAM("     prop_pressure:" + String(adc_value1));        
+        Serial.print("adc_value0: " + String(adc_value0));
+        Serial.println("     float_psig:" + String(float_psig));        
 
         previousMillis = currentMillis;
 //        avgPressure(adc_value0);
