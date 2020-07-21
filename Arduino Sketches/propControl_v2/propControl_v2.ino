@@ -124,6 +124,7 @@ void connect() {
 void messageReceived(String &topic, String &payload) {
     Serial.println("incoming: " + topic + " - " + payload);
 
+    // For valveDebug only
     if (topic == "singleValveOn" || topic == "singleValveOff") {
         valveID = payload.toInt() - 1;  // Because GPIO incrementation begins at 0 while valveIDs begin at 1
   
@@ -150,6 +151,124 @@ void messageReceived(String &topic, String &payload) {
         openedMicros = micros();
         GPIO_IC.digitalWrite(0, HIGH);
         timedPropel();  // Only sending "openedTime" because the function requires a number to be passed
+    }
+
+    // Propel commands
+    if (topic == "propel") {
+        if (payload == "fwd") {
+          // Valves 3 and 12 (GPIO 2 and 11)
+          GPIO_IC.digitalWrite(2, HIGH);
+          GPIO_IC.digitalWrite(11, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "bckwd") {
+          // Valves 6 and 9 (GPIO 5 and 8)
+          GPIO_IC.digitalWrite(5, HIGH);
+          GPIO_IC.digitalWrite(8, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+        
+        if (payload == "panleft") {
+          // Valves 3 and 6 (GPIO 2 and 5)
+          GPIO_IC.digitalWrite(2, HIGH);
+          GPIO_IC.digitalWrite(5, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+        
+        if (payload == "panright") {
+          // Valves 9 and 12 (GPIO 8 and 11)
+          GPIO_IC.digitalWrite(8, HIGH);
+          GPIO_IC.digitalWrite(11, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "turnleft") {
+          // Valves 6 and 12 (GPIO 5 and 11)
+          GPIO_IC.digitalWrite(6, HIGH);
+          GPIO_IC.digitalWrite(11, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "turnright") {
+          // Valves 3 and 9 (GPIO 2 and 8)
+          GPIO_IC.digitalWrite(2, HIGH);
+          GPIO_IC.digitalWrite(8, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "turnoff") {
+          // All valves off
+          for (valveID=0; valveID<12; valveID++) {
+            GPIO_IC.digitalWrite(valveID, LOW); 
+          }
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    }
+
+    // Refill commands
+    if (topic == "refill") {
+        if (payload == "fwd") {
+          // Valves 1, 2 and 10, 11 (GPIO 0, 1 and 9, 10)
+          GPIO_IC.digitalWrite(0, HIGH);
+          GPIO_IC.digitalWrite(1, HIGH);
+          GPIO_IC.digitalWrite(9, HIGH);
+          GPIO_IC.digitalWrite(10, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "bckwd") {
+          // Valves 4, 5 and 7, 8 (GPIO 3, 4 and 6, 7)
+          GPIO_IC.digitalWrite(3, HIGH);
+          GPIO_IC.digitalWrite(4, HIGH);
+          GPIO_IC.digitalWrite(6, HIGH);
+          GPIO_IC.digitalWrite(7, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+        
+        if (payload == "panleft") {
+          // Valves 1, 2 and 4, 5 (GPIO 0, 1 and 3, 4)
+          GPIO_IC.digitalWrite(0, HIGH);
+          GPIO_IC.digitalWrite(1, HIGH);
+          GPIO_IC.digitalWrite(3, HIGH);
+          GPIO_IC.digitalWrite(4, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+        
+        if (payload == "panright") {
+          // Valves 7, 8 and 10, 11 (GPIO 6, 7 and 9, 10)
+          GPIO_IC.digitalWrite(6, HIGH);
+          GPIO_IC.digitalWrite(7, HIGH);
+          GPIO_IC.digitalWrite(9, HIGH);
+          GPIO_IC.digitalWrite(10, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "turnleft") {
+          // Valves 4, 5 and 10, 11 (GPIO 3, 4 and 9, 10)
+          GPIO_IC.digitalWrite(3, HIGH);
+          GPIO_IC.digitalWrite(4, HIGH);
+          GPIO_IC.digitalWrite(9, HIGH);
+          GPIO_IC.digitalWrite(10, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "turnright") {
+          // Valves 1, 2 and 7, 8 (GPIO 0, 1 and 6, 7)
+          GPIO_IC.digitalWrite(0, HIGH);
+          GPIO_IC.digitalWrite(1, HIGH);
+          GPIO_IC.digitalWrite(6, HIGH);
+          GPIO_IC.digitalWrite(7, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+    
+        if (payload == "turnoff") {
+          // All valves off
+          for (valveID=0; valveID<12; valveID++) {
+            GPIO_IC.digitalWrite(valveID, LOW); 
+          }
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
     }
 }
 

@@ -58,27 +58,57 @@
 				font-size: 16px;
 			}
 
-
 			.button:active {
 				background-color: #f44336;
 				/* Red */
 			}
 
+			.square {
+				width: 50px;
+				height: 50px;
+				background-size: contain !important;
+				/* background: url("/square.svg") no-repeat center; */
+				background: url("image/square.svg") no-repeat center;
+				top: auto;
+				bottom: auto;
+			}
+
 			.chevron {
-				width: 75px;
-				height: 75px;
-				background: url("/chevron-up.svg") no-repeat center;
+				width: 50px;
+				height: 50px;
+				background-size: contain !important;
+				/* background: url("/chevron-up.svg") no-repeat center; */
+				background: url("image/chevron-up.svg") no-repeat center;
+			}
+
+			.doublechevron {
+				width: 60px;
+				height: 60px;
+				background-size: contain !important;
+				/* background: url("/double-chevron-up.svg") no-repeat center; */
+				background: url("image/double-chevron-up.svg") no-repeat center;
+			}
+
+			.rotation {
+				height: 50px;
+				background-size: contain !important;
+				/* background: url("/counterclockwise.svg") no-repeat center; */
+				background: url("image/counterclockwise.svg") no-repeat center;
+			}
+
+			.doublerotation {
+				height: 50px;
+				background-size: contain !important;
+				/* background: url("/double-counterclockwise.svg") no-repeat center; */
+				background: url("image/double-counterclockwise.svg") no-repeat center;
 			}
 
 			.chevron:active {
 				background-color: red;
 			}
 
-			.rotation {
-				width: 75px;
-				height: 75px;
-				background-size: contain !important;
-				background: url("/counterclockwise.svg") no-repeat center;
+			.square:active {
+				background-color: blue;
 			}
 
 			.rotation:active {
@@ -114,24 +144,27 @@
 			}
 
 			td {
-				width: 33.33%;
+				width: 100%;
 				position: relative;
+				vertical-align: middle;
+				padding: 5px;
+				
 			}
 
-			td:after {
+			/* td:after {
 				content: '';
 				display: block;
-				margin-top: 20%;
-			}
+				padding: 0px;
+			} */
 
-			td .content {
+			/* td .content {
 				position: absolute;
 				top: 0;
 				bottom: 0;
 				left: 0;
 				right: 0;
 				background: gold;
-			}
+			} */
 
 			.center {
 				margin: auto;
@@ -142,70 +175,184 @@
 		<!-- END CSS -->
 	</head>
 
+
+
 	<!-- BEGIN HTML -->
 	<body class="noselect">
 		<table border=0>
-			<!-- Rows -->
+			<!-- Row 1 -->
 			<tr>
+				<td></td>
+				<td></td>
 				<td></td>
 				<td>
 					<div align="center">
-						<div id="fwdButton" class="chevron"></div>
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>
-					<div align="center">
-						<div id="panleftButton" class="chevron rotated270"></div>
-					</div>
-				</td>
-				<td>
-					<div align="center">Translate</div>
-				</td>
-				<td>
-					<div align="center">
-						<div id="panrightButton" class="chevron rotated90"></div>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>
-					<div align="center">
-						<div id="bckwdButton" class="chevron rotated180"></div>
+						<div class="chevron" id="fwdButton"></div>
 					</div>
 				</td>
 				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
+			
+			<!-- Row 2 -->
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<div align="center">
+						<div class="doublechevron" id="xtrafwdButton"></div>
+					</div>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+
+			<!-- Row 3 -->
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<div align="center">
+						<div id="refillFwd" class="square"></div>
+					</div>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+
+			<!-- Row 4 -->
 			<tr>
 				<td>
 					<div align="center">
-						<div id="turnleftButton" class="rotation"></div>
+						<div class="chevron rotated270" id="panleftButton"></div>
 					</div>
 				</td>
 				<td>
-					<div align="center">Rotate</div>
+					<div align="center">
+						<div class="doublechevron rotated270" id="xtrapanleftButton"></div>
+					</div>
 				</td>
 				<td>
 					<div align="center">
-						<div id="turnrightButton" class="rotation rotationFlipped"></div>
+						<div class="square" id="refillLeft"></div>
+					</div>
+				</td>
+				<td>
+				</td>
+				<td>
+					<div align="center">
+						<div class="square" id="refillRight"></div>
+					</div>
+				</td>
+				<td>
+					<div align="center">
+						<div class="doublechevron rotated90" id="xtrapanrightButton"></div>
+					</div>
+				</td>
+				<td>
+					<div align="center">
+						<div class="chevron rotated90" id="panrightButton"></div>
 					</div>
 				</td>
 			</tr>
+
+			<!-- Row 5 -->
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<div align="center">
+						<div class="square" id="refillBckwd"></div>
+					</div>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+
+			<!-- Row 6 -->
+			<tr>
+				<td rowspan="2">
+					<div align="center">
+						<div class="rotation" id="turnleftButton"></div>
+					</div>
+				</td>
+				<td>
+					<div align="center">
+						<div class="doublerotation" id="xtraturnleftButton"></div>
+					</div>
+				</td>
+				<td></td>
+				<td>
+					<div align="center">
+						<div class="doublechevron rotated180" id="xtrabckwdButton"></div>
+					</div>
+				</td>
+				<td></td>
+				<td>
+					<div align="center">
+						<div class="doublerotation rotationFlipped" id="xtraturnrightButton"></div>
+					</div>
+				</td>
+				<td rowspan="2">
+					<div align="center">
+						<div class="rotation rotationFlipped" id="turnrightButton"></div>
+					</div>
+				</td>
+			</tr>
+
+			<!-- Row 7 -->
 			<tr>
 				<td>
 					<div align="center">
-						<div align="center">XDCR0 PSI:</div>
+						<div id="refillTurnLeft" class="square"></div>
+					</div>
+				</td>
+				<td></td>
+				<td>
+					<div align="center">
+						<div class="chevron rotated180" id="bckwdButton"></div>
+					</div>
+				</td>
+				<td></td>
+				<td>
+					<div align="center">
+						<div id="refillTurnRight" class="square"></div>
+					</div>
+				</td>
+			</tr>
+
+			<!-- Row 8 -->
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+
+			<!-- Row 9 -->
+			<tr>
+				<td colspan="2">
+					<div align="center">
+						<div align="center">FLOAT PSIG:</div>
 						<div id="float_psi"></div>
 					</div>
 				</td>
-				<td>
-					<div align="center"></div>
-				</td>
-				<td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td colspan="2">
 					<div align="center">
-						<div align="center">XDCR1 PSI:</div>
+						<div align="center">PROP PSIG:</div>
 						<div id="prop_psi"></div>
 						<!-- <div align="center">Weight:</div><div id="weight"></div> -->
 					</div>
@@ -213,6 +360,9 @@
 			</tr>
 		</table>
 
+
+
+		
 		<table border=0>
 			<tr>
 				<br><br>
@@ -235,12 +385,14 @@
 			</tr>
 			<tr>
 				<td>
-					<div align="center"><a href="/valveDebug.html" class="linkButton">Valve Debug Screen</a></div>
+					<div align="center"><a href="/valveDebug.html" class="linkButton">Valve Debug</a></div>
 				</td>
 			</tr>
 		</table>
 	</body>
 	<!-- END HTML -->
+
+
 
 	<!-- BEGIN JAVASCRIPT-->
 	<script>
@@ -255,11 +407,11 @@
 				$("#float_psi").text(float_psi);
 
 
-				if (float_psi >= 50 && float_psi < 70) {
+				if (float_psi >= 40 && float_psi < 60) {
 					$("#float_psi").css("background-color", "yellow")
 				}
 
-				else if (float_psi >= 70) {
+				else if (float_psi >= 60) {
 					$("#float_psi").css("background-color", "red")
 				}
 
@@ -273,11 +425,11 @@
 				prop_psi = parseFloat(message.toString()).toFixed(1);
 				$("#prop_psi").text(prop_psi);
 
-				if (prop_psi >= 70 && prop_psi < 90) {
+				if (prop_psi >= 90 && prop_psi < 105) {
 					$("#prop_psi").css("background-color", "yellow")
 				}
 
-				else if (prop_psi >= 90) {
+				else if (prop_psi >= 100) {
 					$("#prop_psi").css("background-color", "red")
 				}
 
@@ -298,61 +450,99 @@
 			}
 		})
 
+
+
 		// Send messages based on interface input
 		// Open valves
 		$("#fwdButton").on("touchstart mousedown", function () {
-			client.publish('propel', 'fwd', { qos: 1 })
+			client.publish('propel', 'fwd', { qos: 2 })
+		})
+		$("#refillFwd").on("touchstart mousedown", function () {
+			client.publish('refill', 'fwd', { qos: 2 })
 		})
 
 		$("#bckwdButton").on("touchstart mousedown", function () {
-			client.publish('propel', 'bckwd', { qos: 1 })
+			client.publish('propel', 'bckwd', { qos: 2 })
+		})
+		$("#refillBckwd").on("touchstart mousedown", function () {
+			client.publish('refill', 'bckwd', { qos: 2 })
 		})
 
 		$("#panleftButton").on("touchstart mousedown", function () {
-			client.publish('propel', 'panleft', { qos: 1 })
+			client.publish('propel', 'panleft', { qos: 2 })
+		})
+		$("#refillLeft").on("touchstart mousedown", function () {
+			client.publish('refill', 'left', { qos: 2 })
 		})
 
 		$("#panrightButton").on("touchstart mousedown", function () {
-			client.publish('propel', 'panright', { qos: 1 })
+			client.publish('propel', 'panright', { qos: 2 })
+		})
+		$("#refillRight").on("touchstart mousedown", function () {
+			client.publish('refill', 'right', { qos: 2 })
 		})
 
 		$("#turnleftButton").on("touchstart mousedown", function () {
-			client.publish('propel', 'turnleft', { qos: 1 })
+			client.publish('propel', 'turnleft', { qos: 2 })
+		})
+		$("#refillTurnLeft").on("touchstart mousedown", function () {
+			client.publish('refill', 'turnleft', { qos: 2 })
 		})
 
 		$("#turnrightButton").on("touchstart mousedown", function () {
-			client.publish('propel', 'turnright', { qos: 1 })
+			client.publish('propel', 'turnright', { qos: 2 })
+		})
+		$("#refillTurnRight").on("touchstart mousedown", function () {
+			client.publish('refill', 'turnright', { qos: 2 })
 		})
 
 		// Close valves
 		$("#fwdButton").on("touchend mouseup", function () {
-			client.publish('propel', 'turnoff', { qos: 1 })
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#refillFwd").on("touchend mouseup", function () {
+			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#bckwdButton").on("touchend mouseup", function () {
-			client.publish('propel', 'turnoff', { qos: 1 })
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#refillBckwd").on("touchend mouseup", function () {
+			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#panleftButton").on("touchend mouseup", function () {
-			client.publish('propel', 'turnoff', { qos: 1 })
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#refillLeft").on("touchend mouseup", function () {
+			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#panrightButton").on("touchend mouseup", function () {
-			client.publish('propel', 'turnoff', { qos: 1 })
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#refillRight").on("touchend mouseup", function () {
+			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#turnleftButton").on("touchend mouseup", function () {
-			client.publish('propel', 'turnoff', { qos: 1 })
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#refillTurnLeft").on("touchend mouseup", function () {
+			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#turnrightButton").on("touchend mouseup", function () {
-			client.publish('propel', 'turnoff', { qos: 1 })
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#refillTurnRight").on("touchend mouseup", function () {
+			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		// Prescribed valve-open time (for mass flow rate characterization)
 		$("#sendButton").on("touchend mouseup", function () {
 			timeIn = $("#timeInput").val();
-			client.publish('timedPropelInit', timeIn.toString())
+			client.publish('timedPropel', timeIn.toString())
 		})
 	</script>
 	<!-- END JAVASCRIPT -->
