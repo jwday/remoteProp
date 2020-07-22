@@ -37,15 +37,20 @@
             background-color: #008CBA; /* Blue */
             border: none;
             color: white;
-            padding: 25px 25px;
+            padding: 20px 20px;
+			margin: auto;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
+            display: block;
             font-size: 18px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+			min-width: 60px;
+			max-width: 100px;
+			margin-top: 10%;
+			margin-bottom: 10%;
+            /* position: absolute; */
+            /* top: 50%; */
+            /* left: 50%; */
+            /* transform: translate(15%, 15%); */
         }
 
         .linkButton {
@@ -83,7 +88,7 @@
         td:after {
             content: '';
             display: block;
-            margin-top: 50%;
+            margin-top: 0%;
         }
 
         td .content {
@@ -98,80 +103,96 @@
         div {
             overflow: hidden;
             white-space: nowrap;
+			min-height: 30px;
         }
     </style>
 </head>
 
 <body class="noselect">
-    <table border=1>
+    <table border="0">
         <!-- Row 1-->
         <tr>
             <td>
-                <div id="valve1Button" class="button">VLV 1</div><br><br>
+                <div id="valve1Button" class="button">VLV 1</div>
             </td>
             <td>
-                <div id="valve2Button" class="button">VLV 2</div><br><br>
+                <div id="valve2Button" class="button">VLV 2</div>
             </td>
             <td>
-                <div id="valve3Button" class="button">VLV 3</div><br><br>
+                <div id="valve3Button" class="button">VLV 3</div>
             </td>
         </tr>
 
         <!-- Row 2-->
         <tr>
             <td>
-                <div id="valve4Button" class="button">VLV 4</div><br><br>
+                <div id="valve4Button" class="button">VLV 4</div>
             </td>
             <td>
-                <div id="valve5Button" class="button">VLV 5</div><br><br>
+                <div id="valve5Button" class="button">VLV 5</div>
             </td>
             <td>
-                <div id="valve6Button" class="button">VLV 6</div><br><br>
+                <div id="valve6Button" class="button">VLV 6</div>
             </td>
         </tr>
 
         <!-- Row 3-->
         <tr>
             <td>
-                <div id="valve7Button" class="button">VLV 7</div><br><br>
+                <div id="valve7Button" class="button">VLV 7</div>
             </td>
             <td>
-                <div id="valve8Button" class="button">VLV 8</div><br><br>
+                <div id="valve8Button" class="button">VLV 8</div>
             </td>
             <td>
-                <div id="valve9Button" class="button">VLV 9</div><br><br>
+                <div id="valve9Button" class="button">VLV 9</div>
             </td>
         </tr>
 
         <!-- Row 4-->
         <tr>
             <td>
-                <div id="valve10Button" class="button">VLV 10</div><br><br>
+                <div id="valve10Button" class="button">VLV 10</div>
             </td>
             <td>
-                <div id="valve11Button" class="button">VLV 11</div><br><br>
+                <div id="valve11Button" class="button">VLV 11</div>
             </td>
             <td>
-                <div id="valve12Button" class="button">VLV 12</div><br><br>
-            </td>
-        </tr>
-
-        <!-- Row 5-->
-        <tr>
-            <td>
-                <div align="center" class="readout">ADC0 PSIG:</div><br><div id="float_psi"></div>
-            </td>
-            <td></td>
-            <td>
-                <div align="center" class="readout">ADC1 PSIG:</div><br><div id="prop_psi"></div>
+                <div id="valve12Button" class="button">VLV 12</div>
             </td>
         </tr>
     </table>
 
-    <table style="width:50%" border=0>
-        <tr>
-            <br>
-        </tr>
+	<table border="0">
+		<tr>
+			<td colspan="2">
+				<div></div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div align="center">
+					<div align="center">FLOAT PSIG:</div>
+					<div id="float_psi"></div>
+				</div>
+			</td>
+
+			<td>
+				<div align="center">
+					<div align="center">PROP PSIG:</div>
+					<div id="prop_psi"></div>
+					<!-- <div align="center">Weight:</div><div id="weight"></div> -->
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<table border="0">
+		<tr>
+			<td colspan="2">
+				<div></div>
+			</td>
+		</tr>
         <tr>
             <td>
                 <div align="center"><a href="/index.html" class="linkButton">Main Interface</a></div>

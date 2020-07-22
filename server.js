@@ -67,7 +67,7 @@ broker.on('clientConnected', function(client) {
 });
 
 broker.on('clientDisconnected', function(client) {  // Failsafe to close all valves in case client disconnects
-    broker.publish({topic: 'propel', payload: 'turnoff', qos: 2})
+	// broker.publish({topic: 'propel', payload: 'turnoff', qos: 2})
 });
 
 

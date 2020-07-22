@@ -121,6 +121,7 @@ void connect() {
     client.subscribe("propel");
     client.subscribe("refill");
     client.subscribe("timedPropel");
+    client.subscribe("getValveStates");
 }
 
     
@@ -327,8 +328,16 @@ void messageReceived(String &topic, String &payload) {
           digitalWrite(2, HIGH);  // Will turn LED ON when an open valve command is sent
         }
     }
-}
 
+    // Return Valve States
+    if (topic == "getValveStates") {
+      for (int valveID=0; valveID<12; valveID++) {            // Cycle through all valves
+        if (GPIO_IC.digitalRead(valveID) == HIGH) {           // If a valve is HIGH
+          client.publish("valveStateOn", String(valveID));    // Publish the ID of that valve under topic "valveStateOn"
+        }
+      }
+    }
+}
 
 
 void setup() {

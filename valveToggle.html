@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Display</title>
+	<script src="/mqtt.js"></script>
+	<script src="/jquery.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+	<script src="/js/bootstrap.min.js"></script>
+
+	<style>
+		body {
+			margin: 10px;
+			font: 15pt Menlo, Monaco, Consolas, "Courier New", monospace;
+			background-color: #e9ecef;
+		}
+
+		.noselect {
+			-webkit-touch-callout: none;
+			/* iOS Safari */
+			-webkit-user-select: none;
+			/* Safari */
+			-khtml-user-select: none;
+			/* Konqueror HTML */
+			-moz-user-select: none;
+			/* Firefox */
+			-ms-user-select: none;
+			/* Internet Explorer/Edge */
+			user-select: none;
+			/* Non-prefixed version, currently supported by Chrome and Opera */
+		}
+
+		.button {
+            background-color: #008CBA; /* Blue */
+            border: none;
+            color: white;
+            padding: 20px 20px;
+			margin: auto;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-size: 18px;
+			min-width: 60px;
+			max-width: 200px;
+			margin-top: 0%;
+			margin-bottom: -10%;
+            /* position: absolute; */
+            /* top: 50%; */
+            /* left: 50%; */
+            /* transform: translate(15%, 15%); */
+		}
+
+		.linkButton {
+			background-color: brown;
+			/* Blue */
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+		}
+
+		.readout {
+			font-size: 18px;
+		}
+
+		.button:active {
+			background-color: #f44336;
+			/* Red */
+		}
+
+		table {
+			width: 100%;
+			max-width: 400px;
+			margin: auto;
+			border-collapse: collapse;
+		}
+
+		td {
+			width: 33.33%;
+			position: relative;
+			padding: 0px;
+		}
+
+		/* td::before {
+            content: '';
+            display: block;
+			margin-top: 10%;
+			margin-top: 20%;
+		} */
+
+		td:after {
+			content: '';
+			display: block;
+			/* margin-top: 10%; */
+			margin-bottom: 10%;
+		}
+
+		td .content {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: gold;
+		}
+
+		.center {
+			margin: auto;
+			width: 50%;
+			padding: 10px;
+		}
+
+		div {
+			overflow: hidden;
+			white-space: nowrap;
+			padding-top: 5%;
+			min-height: 30px;
+		}
+
+		/* The switch - the box around the slider */
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 60px;
+			height: 34px;
+			margin-bottom: 20%;
+		}
+
+		/* Hide default HTML checkbox */
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		/* The slider */
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .4s;
+			transition: .4s;
+			transform: translate(60%, 20%);
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		input:checked+.slider {
+			background-color: #2196F3;
+		}
+
+		input:focus+.slider {
+			box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked+.slider:before {
+			-webkit-transform: translateX(26px);
+			-ms-transform: translateX(26px);
+			transform: translateX(26px);
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+			border-radius: 34px;
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
+		}
+	</style>
+</head>
+
+<body class="noselect">
+	<table border="0">
+		<!-- Row 1-->
+		<tr>
+			<td>
+				<div align="center">VLV 1</div>
+				<label class="switch">
+					<input id="valve1Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 2</div>
+				<label class="switch">
+					<input id="valve2Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 3</div>
+				<label class="switch">
+					<input id="valve3Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+		</tr>
+
+		<!-- Row 2-->
+		<tr>
+			<td>
+				<div align="center">VLV 4</div>
+				<label class="switch">
+					<input id="valve4Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 5</div>
+				<label class="switch">
+					<input id="valve5Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 6</div>
+				<label class="switch">
+					<input id="valve6Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+		</tr>
+
+		<!-- Row 3-->
+		<tr>
+			<td>
+				<div align="center">VLV 7</div>
+				<label class="switch">
+					<input id="valve7Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 8</div>
+				<label class="switch">
+					<input id="valve8Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 9</div>
+				<label class="switch">
+					<input id="valve9Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+		</tr>
+
+		<!-- Row 4-->
+		<tr>
+			<td>
+				<div align="center">VLV 10</div>
+				<label class="switch">
+					<input id="valve10Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 11</div>
+				<label class="switch">
+					<input id="valve11Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+			<td>
+				<div align="center">VLV 12</div>
+				<label class="switch">
+					<input id="valve12Switch" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</td>
+		</tr>
+
+		<!-- Row 5-->
+		<tr>
+			<td colspan="3">
+				<div id="allValvesOff" class="button">All Valves Off</div>
+			</td>
+		</tr>
+	</table>
+
+	<table border="0">
+		<tr>
+			<td>
+				<div align="center">
+					<div align="center">FLOAT PSIG:</div>
+					<div id="float_psi"></div>
+				</div>
+			</td>
+
+			<td>
+				<div align="center">
+					<div align="center">PROP PSIG:</div>
+					<div id="prop_psi"></div>
+					<!-- <div align="center">Weight:</div><div id="weight"></div> -->
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<table style="width:50%" border=0>
+		<tr>
+			<br>
+		</tr>
+		<tr>
+			<td>
+				<div align="center"><a href="/index.html" class="linkButton">Main Interface</a></div>
+			</td>
+		</tr>
+	</table>
+
+</body>
+
+
+
+
+<script>
+	var client = mqtt.connect()
+
+	client.subscribe(["float_pressure", "prop_pressure", "valveStateOn"]);
+
+	client.publish('getValveStates', { qos: 2 })
+
+	client.on('message', function (topic, message) {
+		if (topic == "float_pressure") {
+			float_psi = parseFloat(message.toString()).toFixed(1);
+			$("#float_psi").text(float_psi);
+
+
+			if (float_psi >= 50 && float_psi < 70) {
+				$("#float_psi").css("background-color", "yellow")
+			}
+
+			else if (float_psi >= 70) {
+				$("#float_psi").css("background-color", "red")
+			}
+
+			else {
+				$("#float_psi").css("background-color", "transparent")
+			}
+
+		}
+
+		else if (topic == "prop_pressure") {
+			prop_psi = parseFloat(message.toString()).toFixed(1);
+			$("#prop_psi").text(prop_psi);
+
+			if (prop_psi >= 70 && prop_psi < 90) {
+				$("#prop_psi").css("background-color", "yellow")
+			}
+
+			else if (prop_psi >= 90) {
+				$("#prop_psi").css("background-color", "red")
+			}
+
+			else {
+				$("#prop_psi").css("background-color", "transparent")
+			}
+		}
+
+		else if (topic == "valveStateOn") {
+			var valveStr = "valve";
+			var switchStr = "Switch";
+			valveID = message.toString();
+			console.log(valveID);
+			var valveSwitchStr = valveStr.concat(valveID, switchStr);
+			$('#' + valveSwitchStr).trigger("click")					// Should "click" any valves that the Arduino returns as "On"
+		}
+	})
+
+
+	// Kill switch
+	$("#allValvesOff").on("touchend mouseup", function() {
+		var valveStr = "valve";
+		var switchStr = "Switch";
+
+		for (var i=1; i < 13; i++) {
+			var valveSwitchStr = valveStr.concat(i, switchStr);
+
+			if ($('#' + valveSwitchStr).is(":checked")) {
+				$('#' + valveSwitchStr).trigger("click")
+			}
+		}
+	})
+
+	
+	// Valve switches
+	$('#valve1Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '1', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '1', { qos: 2 })
+		}
+	})
+
+	$('#valve2Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '2', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '2', { qos: 2 })
+		}
+	})
+
+	$('#valve3Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '3', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '3', { qos: 2 })
+		}
+	})
+
+	$('#valve4Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '4', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '4', { qos: 2 })
+		}
+	})
+	$('#valve5Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '5', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '5', { qos: 2 })
+		}
+	})
+
+	$('#valve6Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '6', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '6', { qos: 2 })
+		}
+	})
+
+	$('#valve7Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '7', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '7', { qos: 2 })
+		}
+	})
+
+	$('#valve8Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '8', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '8', { qos: 2 })
+		}
+	})
+
+	$('#valve9Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '9', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '9', { qos: 2 })
+		}
+	})
+
+	$('#valve10Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '10', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '10', { qos: 2 })
+		}
+	})
+
+	$('#valve11Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '11', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '11', { qos: 2 })
+		}
+	})
+	
+	$('#valve12Switch').change(function () {
+		if(this.checked) {
+			client.publish('singleValveOn', '12', { qos: 2 })
+		}
+		
+		else {
+			client.publish('singleValveOff', '12', { qos: 2 })
+		}
+	})
+
+	// $("#valve1Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '1', { qos: 2 })
+	// })
+	// $("#valve2Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '2', { qos: 2 })
+	// })
+	// $("#valve3Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '3', { qos: 2 })
+	// })
+	// $("#valve4Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '4', { qos: 2 })
+	// })
+	// $("#valve5Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '5', { qos: 2 })
+	// })
+	// $("#valve6Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '6', { qos: 2 })
+	// })
+	// $("#valve7Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '7', { qos: 2 })
+	// })
+	// $("#valve8Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '8', { qos: 2 })
+	// })
+	// $("#valve9Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '9', { qos: 2 })
+	// })
+	// $("#valve10Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '10', { qos: 2 })
+	// })
+	// $("#valve11Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '11', { qos: 2 })
+	// })
+	// $("#valve12Switch").on("touchstart mousedown", function () {
+	// 	client.publish('singleValveOn', '12', { qos: 2 })
+	// })
+
+
+
+	// $("#valve1Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '1', { qos: 2 })
+	// })
+	// $("#valve2Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '2', { qos: 2 })
+	// })
+	// $("#valve3Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '3', { qos: 2 })
+	// })
+	// $("#valve4Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '4', { qos: 2 })
+	// })
+	// $("#valve5Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '5', { qos: 2 })
+	// })
+	// $("#valve6Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '6', { qos: 2 })
+	// })
+	// $("#valve7Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '7', { qos: 2 })
+	// })
+	// $("#valve8Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '8', { qos: 2 })
+	// })
+	// $("#valve9Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '9', { qos: 2 })
+	// })
+	// $("#valve10Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '10', { qos: 2 })
+	// })
+	// $("#valve11Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '11', { qos: 2 })
+	// })
+	// $("#valve12Button").on("touchend mouseup", function () {
+	// 	client.publish('singleValveOff', '12', { qos: 2 })
+	// })
+
+
+</script>
+
+</html>

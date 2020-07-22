@@ -47,11 +47,23 @@
 			}
 
 			.linkButton {
-				background-color: brown;
+				background-color: #2196F3;
 				/* Blue */
 				border: none;
 				color: white;
 				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+			}
+
+			.linkButton2 {
+				background-color: brown;
+				/* Blue */
+				border: none;
+				color: white;
+				padding: 15px 37px;
 				text-align: center;
 				text-decoration: none;
 				display: inline-block;
@@ -146,39 +158,45 @@
 			}
 
 			table {
-				width: 27%;
+				width: 100%;
+				max-width: 400px;
 				margin: auto;
 				border-collapse: collapse;
 			}
 
 			td {
-				width: 100%;
+				width: 33%;
 				position: relative;
 				vertical-align: middle;
 				padding: 5px;
-				
 			}
 
-			/* td:after {
+			td:after {
 				content: '';
 				display: block;
 				padding: 0px;
-			} */
+			}
 
-			/* td .content {
+			td .content {
 				position: absolute;
 				top: 0;
 				bottom: 0;
 				left: 0;
 				right: 0;
 				background: gold;
-			} */
+			}
 
 			.center {
 				margin: auto;
 				width: 50%;
 				padding: 10px;
 			}
+
+			div {
+				overflow: hidden;
+				white-space: nowrap;
+				min-height: 30px;
+        }
 		</style>
 		<!-- END CSS -->
 	</head>
@@ -335,30 +353,23 @@
 					</div>
 				</td>
 			</tr>
-
-			<!-- Row 8 -->
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-
-			<!-- Row 9 -->
+		</table>
+		
+		<table border="0">
 			<tr>
 				<td colspan="2">
+					<div></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<div align="center">
 						<div align="center">FLOAT PSIG:</div>
 						<div id="float_psi"></div>
 					</div>
 				</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td colspan="2">
+
+				<td>
 					<div align="center">
 						<div align="center">PROP PSIG:</div>
 						<div id="prop_psi"></div>
@@ -371,7 +382,7 @@
 
 
 		
-		<table border=0>
+		<!-- <table border=0>
 			<tr>
 				<br><br>
 			</tr>
@@ -385,15 +396,17 @@
 					</div>
 				</td>
 			</tr>
-		</table>
+		</table> -->
 
-		<table style="width:25%" border=0>
+		<table style="width:50%" border=0>
 			<tr>
-				<br>
+				<td>
+					<div align="center"><a href="/valveToggle.html" class="linkButton">Valve Toggle</a></div>
+				</td>
 			</tr>
 			<tr>
 				<td>
-					<div align="center"><a href="/valveDebug.html" class="linkButton">Valve Debug</a></div>
+					<div align="center"><a href="/valveDebug.html" class="linkButton2">Valve Debug</a></div>
 				</td>
 			</tr>
 		</table>
