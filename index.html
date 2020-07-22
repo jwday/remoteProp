@@ -63,16 +63,6 @@
 				/* Red */
 			}
 
-			.square {
-				width: 50px;
-				height: 50px;
-				background-size: contain !important;
-				/* background: url("/square.svg") no-repeat center; */
-				background: url("image/square.svg") no-repeat center;
-				top: auto;
-				bottom: auto;
-			}
-
 			.chevron {
 				width: 50px;
 				height: 50px;
@@ -103,16 +93,34 @@
 				background: url("image/double-counterclockwise.svg") no-repeat center;
 			}
 
+			.square {
+				width: 50px;
+				height: 50px;
+				background-size: contain !important;
+				/* background: url("/square.svg") no-repeat center; */
+				background: url("image/square.svg") no-repeat center;
+				top: auto;
+				bottom: auto;
+			}
+
 			.chevron:active {
 				background-color: red;
 			}
 
-			.square:active {
-				background-color: blue;
+			.doublechevron:active {
+				background-color: red;
 			}
 
 			.rotation:active {
 				background-color: red
+			}
+
+			.doublerotation:active {
+				background-color: red
+			}
+
+			.square:active {
+				background-color: blue;
 			}
 
 			.rotated90 {
@@ -457,12 +465,18 @@
 		$("#fwdButton").on("touchstart mousedown", function () {
 			client.publish('propel', 'fwd', { qos: 2 })
 		})
+		$("#xtrafwdButton").on("touchstart mousedown", function () {
+			client.publish('propel', 'xtrafwd', { qos: 2 })
+		})
 		$("#refillFwd").on("touchstart mousedown", function () {
 			client.publish('refill', 'fwd', { qos: 2 })
 		})
 
 		$("#bckwdButton").on("touchstart mousedown", function () {
 			client.publish('propel', 'bckwd', { qos: 2 })
+		})
+		$("#xtrabckwdButton").on("touchstart mousedown", function () {
+			client.publish('propel', 'xtrabckwd', { qos: 2 })
 		})
 		$("#refillBckwd").on("touchstart mousedown", function () {
 			client.publish('refill', 'bckwd', { qos: 2 })
@@ -471,19 +485,28 @@
 		$("#panleftButton").on("touchstart mousedown", function () {
 			client.publish('propel', 'panleft', { qos: 2 })
 		})
+		$("#xtrapanleftButton").on("touchstart mousedown", function () {
+			client.publish('propel', 'xtrapanleft', { qos: 2 })
+		})
 		$("#refillLeft").on("touchstart mousedown", function () {
-			client.publish('refill', 'left', { qos: 2 })
+			client.publish('refill', 'panleft', { qos: 2 })
 		})
 
 		$("#panrightButton").on("touchstart mousedown", function () {
 			client.publish('propel', 'panright', { qos: 2 })
 		})
+		$("#xtrapanrightButton").on("touchstart mousedown", function () {
+			client.publish('propel', 'xtrapanright', { qos: 2 })
+		})
 		$("#refillRight").on("touchstart mousedown", function () {
-			client.publish('refill', 'right', { qos: 2 })
+			client.publish('refill', 'panright', { qos: 2 })
 		})
 
 		$("#turnleftButton").on("touchstart mousedown", function () {
 			client.publish('propel', 'turnleft', { qos: 2 })
+		})
+		$("#xtraturnleftButton").on("touchstart mousedown", function () {
+			client.publish('propel', 'xtraturnleft', { qos: 2 })
 		})
 		$("#refillTurnLeft").on("touchstart mousedown", function () {
 			client.publish('refill', 'turnleft', { qos: 2 })
@@ -491,6 +514,9 @@
 
 		$("#turnrightButton").on("touchstart mousedown", function () {
 			client.publish('propel', 'turnright', { qos: 2 })
+		})
+		$("#xtraturnrightButton").on("touchstart mousedown", function () {
+			client.publish('propel', 'xtraturnright', { qos: 2 })
 		})
 		$("#refillTurnRight").on("touchstart mousedown", function () {
 			client.publish('refill', 'turnright', { qos: 2 })
@@ -500,11 +526,17 @@
 		$("#fwdButton").on("touchend mouseup", function () {
 			client.publish('propel', 'turnoff', { qos: 2 })
 		})
+		$("#xtrafwdButton").on("touchend mouseup", function () {
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
 		$("#refillFwd").on("touchend mouseup", function () {
 			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#bckwdButton").on("touchend mouseup", function () {
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#xtrabckwdButton").on("touchend mouseup", function () {
 			client.publish('propel', 'turnoff', { qos: 2 })
 		})
 		$("#refillBckwd").on("touchend mouseup", function () {
@@ -514,11 +546,17 @@
 		$("#panleftButton").on("touchend mouseup", function () {
 			client.publish('propel', 'turnoff', { qos: 2 })
 		})
+		$("#xtrapanleftButton").on("touchend mouseup", function () {
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
 		$("#refillLeft").on("touchend mouseup", function () {
 			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#panrightButton").on("touchend mouseup", function () {
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#xtrapanrightButton").on("touchend mouseup", function () {
 			client.publish('propel', 'turnoff', { qos: 2 })
 		})
 		$("#refillRight").on("touchend mouseup", function () {
@@ -528,11 +566,17 @@
 		$("#turnleftButton").on("touchend mouseup", function () {
 			client.publish('propel', 'turnoff', { qos: 2 })
 		})
+		$("#xtraturnleftButton").on("touchend mouseup", function () {
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
 		$("#refillTurnLeft").on("touchend mouseup", function () {
 			client.publish('refill', 'turnoff', { qos: 2 })
 		})
 
 		$("#turnrightButton").on("touchend mouseup", function () {
+			client.publish('propel', 'turnoff', { qos: 2 })
+		})
+		$("#xtraturnrightButton").on("touchend mouseup", function () {
 			client.publish('propel', 'turnoff', { qos: 2 })
 		})
 		$("#refillTurnRight").on("touchend mouseup", function () {
@@ -542,7 +586,7 @@
 		// Prescribed valve-open time (for mass flow rate characterization)
 		$("#sendButton").on("touchend mouseup", function () {
 			timeIn = $("#timeInput").val();
-			client.publish('timedPropel', timeIn.toString())
+			client.publish('timedPropelInit', timeIn.toString())
 		})
 	</script>
 	<!-- END JAVASCRIPT -->

@@ -118,6 +118,9 @@ void connect() {
     Serial.println("Connected to broker!");
     client.subscribe("singleValveOn");
     client.subscribe("singleValveOff");
+    client.subscribe("propel");
+    client.subscribe("refill");
+    client.subscribe("timedPropel");
 }
 
     
@@ -154,14 +157,23 @@ void messageReceived(String &topic, String &payload) {
     }
 
     // Propel commands
-    if (topic == "propel") {
+    else if (topic == "propel") {
         if (payload == "fwd") {
           // Valves 3 and 12 (GPIO 2 and 11)
           GPIO_IC.digitalWrite(2, HIGH);
           GPIO_IC.digitalWrite(11, HIGH);
           digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
         }
-    
+        
+        if (payload == "xtrafwd") {
+          // Valves 2, 3 and 11, 12 (GPIO 1, 2 and 10, 11)
+          GPIO_IC.digitalWrite(1, HIGH);
+          GPIO_IC.digitalWrite(2, HIGH);
+          GPIO_IC.digitalWrite(10, HIGH);
+          GPIO_IC.digitalWrite(11, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }   
+        
         if (payload == "bckwd") {
           // Valves 6 and 9 (GPIO 5 and 8)
           GPIO_IC.digitalWrite(5, HIGH);
@@ -169,9 +181,27 @@ void messageReceived(String &topic, String &payload) {
           digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
         }
         
+        if (payload == "xtrabckwd") {
+          // Valves 5, 6 and 8, 9 (GPIO 4, 5 and 7, 8)
+          GPIO_IC.digitalWrite(4, HIGH);
+          GPIO_IC.digitalWrite(5, HIGH);
+          GPIO_IC.digitalWrite(7, HIGH);
+          GPIO_IC.digitalWrite(8, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+                
         if (payload == "panleft") {
           // Valves 3 and 6 (GPIO 2 and 5)
           GPIO_IC.digitalWrite(2, HIGH);
+          GPIO_IC.digitalWrite(5, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+
+        if (payload == "xtrapanleft") {
+          // Valves 2, 3 and 5, 6 (GPIO 1, 2 and 4, 5)
+          GPIO_IC.digitalWrite(1, HIGH);
+          GPIO_IC.digitalWrite(2, HIGH);
+          GPIO_IC.digitalWrite(4, HIGH);
           GPIO_IC.digitalWrite(5, HIGH);
           digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
         }
@@ -182,10 +212,28 @@ void messageReceived(String &topic, String &payload) {
           GPIO_IC.digitalWrite(11, HIGH);
           digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
         }
+
+        if (payload == "xtrapanright") {
+          // Valves 8, 9 and 11, 12 (GPIO 7, 8 and 10, 11)
+          GPIO_IC.digitalWrite(7, HIGH);
+          GPIO_IC.digitalWrite(8, HIGH);
+          GPIO_IC.digitalWrite(10, HIGH);
+          GPIO_IC.digitalWrite(11, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
     
         if (payload == "turnleft") {
           // Valves 6 and 12 (GPIO 5 and 11)
-          GPIO_IC.digitalWrite(6, HIGH);
+          GPIO_IC.digitalWrite(5, HIGH);
+          GPIO_IC.digitalWrite(11, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
+
+        if (payload == "xtraturnleft") {
+          // Valves 5, 6 and 11, 12 (GPIO 4, 5 and 10, 11)
+          GPIO_IC.digitalWrite(4, HIGH);
+          GPIO_IC.digitalWrite(5, HIGH);
+          GPIO_IC.digitalWrite(10, HIGH);
           GPIO_IC.digitalWrite(11, HIGH);
           digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
         }
@@ -196,13 +244,22 @@ void messageReceived(String &topic, String &payload) {
           GPIO_IC.digitalWrite(8, HIGH);
           digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
         }
+
+        if (payload == "xtraturnright") {
+          // Valves 2, 3 and 8, 9 (GPIO 1, 2 and 7, 8)
+          GPIO_IC.digitalWrite(1, HIGH);
+          GPIO_IC.digitalWrite(2, HIGH);
+          GPIO_IC.digitalWrite(7, HIGH);
+          GPIO_IC.digitalWrite(8, HIGH);
+          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+        }
     
         if (payload == "turnoff") {
           // All valves off
-          for (valveID=0; valveID<12; valveID++) {
+          for (int valveID=0; valveID<12; valveID++) {
             GPIO_IC.digitalWrite(valveID, LOW); 
           }
-          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+          digitalWrite(2, HIGH);  // Will turn LED ON when an open valve command is sent
         }
     }
 
@@ -264,10 +321,10 @@ void messageReceived(String &topic, String &payload) {
     
         if (payload == "turnoff") {
           // All valves off
-          for (valveID=0; valveID<12; valveID++) {
+          for (int valveID=0; valveID<12; valveID++) {
             GPIO_IC.digitalWrite(valveID, LOW); 
           }
-          digitalWrite(2, LOW);  // Will turn LED ON when an open valve command is sent
+          digitalWrite(2, HIGH);  // Will turn LED ON when an open valve command is sent
         }
     }
 }
@@ -332,7 +389,7 @@ void loop() {
     delay(5);  // <- fixes some issues with WiFi stability, but kills the sample rate
 
     if (!client.connected()) {
-        for (int i=0; i<15; i++) {
+        for (int i=0; i<12; i++) {
             GPIO_IC.digitalWrite(i, LOW);  // Cycle through all 16 pins and shut them down. NOTE: This is specific to the Adafruit_MCP23017 library.
         }
         connect(); // Attempt to connect
