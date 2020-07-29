@@ -124,11 +124,11 @@ print('')
 # test_nos = ["20191130_130935", "20191130_130954", "20191130_131419", "20191130_131515", "20191130_131607", "20191130_131624", "20191130_131644"]
 
 # ---=== Steady-state Thrust Tests ===---
-# test_nos = ["20191204_143449", "20191204_143538", "20191204_143636"]  # 35 psia steady-state
-# test_nos = ["20191204_143735", "20191204_143817", "20191204_143931"]  # 55 psia steady-state
-# test_nos = ["20191204_144142", "20191204_144207", "20191204_144256"]  # 75 psia steady-state
-# test_nos = ["20191204_144715", "20191204_144754", "20191204_144840"]  # 95 psia steady-state
-# test_nos = ["20191204_145400", "20191204_145419", "20191204_145442"]  # 115 psia steady-state
+test_nos = ["20191204_143449", "20191204_143538", "20191204_143636"]  # 35 psia steady-state
+test_nos = ["20191204_143735", "20191204_143817", "20191204_143931"]  # 55 psia steady-state
+test_nos = ["20191204_144142", "20191204_144207", "20191204_144256"]  # 75 psia steady-state
+test_nos = ["20191204_144715", "20191204_144754", "20191204_144840"]  # 95 psia steady-state
+test_nos = ["20191204_145400", "20191204_145419", "20191204_145442"]  # 115 psia steady-state
 test_nos = ["20191205_191138",  "20191205_191210",  "20191205_191332",  "20191205_191402",  "20191205_191433"]  # 115 psia steady-state
 
 # test_nos = ["20191223_183908", "20191223_183945", "20191223_183832", "20191223_183725", "20191223_183658"]  # Plenum discharge
@@ -237,6 +237,6 @@ ax2.set_ylabel('Thrust, mN', color='#413839', fontsize=fontsize)
 plt.legend(loc='center', bbox_to_anchor=(0.7, -0.25), ncol=1, frameon=False )
 
 # plt.title('Supply Pressure and Thrust (0.6 mm Nozzle)')
-plt.savefig('/mnt/d/OneDrive - UC Davis/HRVIP/Writing/AIAA SciTech 2019 Paper/Images/Sim Results/image.png')
+# plt.savefig('/mnt/d/OneDrive - UC Davis/HRVIP/Writing/AIAA SciTech 2019 Paper/Images/Sim Results/image.png')
 
 plt.show()
