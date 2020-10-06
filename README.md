@@ -10,10 +10,8 @@ Requires the following packages prior to use:
   - `npm install`
   - `npm install mosca`
   - `npm install express`
-  - `npm serve-index`
-
-- mqtt
-
+  - `npm install serve-index`
+  - `npm install mqtt`
 
 1. Start server from a terminal using the following command:
 
