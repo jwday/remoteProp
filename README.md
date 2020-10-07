@@ -10,11 +10,9 @@ Requires the following packages prior to use:
 0. Clone the repo
 
 1. Install all dependencies listed in `package.json`:
-
   Run: `npm install`
 
 2. Start server from a terminal using the following command:
-
   `node server`
 
 3. Connect to server using a web browser. If connecting on same device, use the following address:
