@@ -30,7 +30,9 @@ Requires the following packages prior to use:
 
     `node server`
     
-    Once running, you should be prompted in-line with the message `Server is up and running`
+    Once running, you should be prompted in-line with the message `Server is up and running`.
+    
+    All broadcasted messages, including client connections/disconnections, will be shown in the terminal window.
 
 2. Connect to server using a web browser: 
 
