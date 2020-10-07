@@ -13,21 +13,26 @@ Requires the following packages prior to use:
 
 ## Installation
 
-0. Clone the repo
+1. Clone the repo
 
     HTTPS: `git clone https://github.com/jwday/remoteProp.git`
     
     SSH: `git clone git@github.com:jwday/remoteProp.git`
 
-1. Install all dependencies listed in `package.json` by navigating to the repo directory and running:
+2. Install all dependencies listed in `package.json` by navigating to the repo directory and running:
 
     `npm install`
 
-2. Start server from the repo directory by running:
+
+# Running the server
+
+1. Start server from the repo directory by running:
 
     `node server`
+    
+    Once running, you should be prompted in-line with the message `Server is up and running`
 
-3. Connect to server using a web browser: 
+2. Connect to server using a web browser: 
 
     If connecting on same device, use the following address: `localhost:3000`
     
