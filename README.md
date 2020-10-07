@@ -9,11 +9,11 @@ Requires the following packages prior to use:
 
 0. Clone the repo
 
-1. Install all dependencies listed in `package.json`:
+1. Install all dependencies listed in `package.json` by navigating to the repo directory and running:
 
     `npm install`
 
-2. Start server from the repo directory:
+2. Start server from the repo directory by running:
 
     `node server`
 
