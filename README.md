@@ -49,4 +49,6 @@ Requires the following packages prior to use:
 
 ## Hardware setup
 
+![Hardware setup](https://github.com/jwday/Thesis/blob/master/figures/wireless_net_bw.png)
+
 Coming soon
