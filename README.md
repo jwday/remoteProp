@@ -10,14 +10,16 @@ Requires the following packages prior to use:
 0. Clone the repo
 
 1. Install all dependencies listed in `package.json`:
-  Run: `npm install`
+
+    Run: `npm install`
 
 2. Start server from a terminal using the following command:
-  `node server`
+
+    `node server`
 
 3. Connect to server using a web browser. If connecting on same device, use the following address:
 
-  `localhost:3000`
+    `localhost:3000`
 
   If connecting on different device on same network, you must determine the IP address of the server, such as `192.168.0.103', and type in the following url:
 
