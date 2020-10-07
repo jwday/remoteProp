@@ -3,9 +3,9 @@ Sets up MQTT broker on a computer, an MQTT client on a browser, and an MQTT clie
 Using the web client you can control twelve valves attached to the ESP8266 by directional control (refer to Thesis-pub for more information), individual valve toggle hold-on, or individual valve press-and-hold.
 
 Requires the following packages prior to use:
-- nodejs
-- mongodb
-- npm
+- nodejs: `sudo apt-get install nodejs`
+- mongodb: `sudo apt-get install mongodb`
+- npm: `sudo apt-get install npm`
 
 0. Clone the repo
 
