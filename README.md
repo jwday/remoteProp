@@ -20,4 +20,5 @@ Requires the following packages prior to use:
 3. Connect to server using a web browser: 
 
     If connecting on same device, use the following address: `localhost:3000`
+    
     If connecting from a different device on the same network, use the IP address of the server: `<server_IP_address>:3000`
