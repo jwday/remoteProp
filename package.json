@@ -23,9 +23,9 @@
     "jquery": "^3.5.1",
     "jsonschema": "^1.2.6",
     "kerberos": "^1.1.3",
+    "mongodb": "^3.1.13",
     "mosca": "^2.8.3",
     "mqtt": "^4.2.1",
-    "serve-index": "^1.9.1",
-    "mongodb": "3.1.13"
+    "serve-index": "^1.9.1"
   }
 }
