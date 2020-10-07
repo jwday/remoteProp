@@ -16,6 +16,8 @@ Requires the following packages prior to use:
 0. Clone the repo
 
     HTTPS: `git clone https://github.com/jwday/remoteProp.git`
+    
+    SSH: `git@github.com:jwday/remoteProp.git`
 
 1. Install all dependencies listed in `package.json` by navigating to the repo directory and running:
 
