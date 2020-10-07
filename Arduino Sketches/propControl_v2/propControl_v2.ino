@@ -22,11 +22,9 @@
 // What SSID do you want to connect to, and what's the password?
 // Note: Local domain names (e.g. "Computer.local" on OSX) are not supported by Arduino.
 // You need to set the IP address of the broker directly.
-const char ssid[] = "Apogee";
-const char pass[] = "PerformHumanSimulator";
-//const char ip_address[] = "192.168.43.35";  // Via celluar hotspot to Raspberry Pi broker
+const char ssid[] = "SSID";
+const char pass[] = "password";
 const char ip_address[] = "192.168.0.200";  // Via Apogee to Raspberry Pi broker
-//const char ip_address[] = "192.168.43.106"; // Via cellular hotspot to LCARS broker
 
 
 // Variables for controlling pressure XDCR publish rate, ADC read variables, and ADC timing variables
