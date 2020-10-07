@@ -24,7 +24,7 @@ Requires the following packages prior to use:
     `npm install`
 
 
-# Running the server
+## Running the server
 
 1. Start server from the repo directory by running:
 
@@ -37,3 +37,8 @@ Requires the following packages prior to use:
     If connecting on same device, use the following address: `localhost:3000`
     
     If connecting from a different device on the same network, use the IP address of the server: `<server IP address>:3000`
+    
+
+## Stopping the server
+
+1. A simple `Ctrl + c` will stop the server.
