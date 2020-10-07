@@ -8,9 +8,10 @@ Requires the following packages prior to use:
 - npm
 
 0. Clone the repo
+
 1. Install all dependencies listed in `package.json`:
 
-Run: `npm install`
+  Run: `npm install`
 
 2. Start server from a terminal using the following command:
 
