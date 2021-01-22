@@ -48,14 +48,32 @@ Requires the following packages prior to use:
 
 
 ## Hardware setup
-
-![Hardware setup](https://github.com/jwday/Thesis/blob/master/figures/wireless_net_bw.png)
+<img src="https://github.com/jwday/remoteProp/blob/master/image/wireless_net_bw.png" alt="wireless connectivity schematic" height="400">
 
 Requires the following devices at minimum:
 - NodeMCU, Feather HUZZAH, or other ESP8266 (Wifi)-enabled microcontroller with Arduino-like code support
 - A physical device with which to control with the ESP8266-enabled device, such as an LED or a solenoid valve
 - Wifi-enabled computer, such as a laptop or a Raspberry Pi 3+
 - Wifi router with ability to assign static IP address to whichever device is running the server/message broker
+
+### PCB Design and Assembly
+
+During initial development, a breadboard prototype (shown below) of the propulsion controller was used to control up to four valves, later increased to twelve using an MCP23017 GPIO Expansion IC.
+
+<img src="https://github.com/jwday/remoteProp/blob/master/image/circuit_breadboard_protoype.jpg" alt="protoboard" height="400">
+
+
+A printed circuit board (PCB) was designed and fabricated to createa compact and reliable electronics package to house all of the propulsion control components. Autodesk EAGLE was used to create the PCB design (shown below), which was then sent to [OSH Park](https://oshpark.com/) for fabrication.
+
+<img src="https://github.com/jwday/remoteProp/blob/master/image/propcontrol-PCB-schematic.PNG" alt="pcb schematic" height="400">
+
+
+All circuit components (resistors, IC sockets, terminals) were soldered by hand and electrical connections tested with a multimeter prior to connecting microcontrollers. A 3D-printed shelf was created to hold the PCB and mount it to the air bearing platform. The process is illustrated in the four-part image below.
+
+<img src="https://github.com/jwday/remoteProp/blob/master/image/pcb_assy_process_small_labeled.png" alt="pcb assy process" height="400">
+
+
+## General Directions for Use
 
 1. Clone and install this repo to whichever device is going to be the server/message broker
 
