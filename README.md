@@ -87,7 +87,7 @@ All circuit components (resistors, IC sockets, terminals) were soldered by hand 
     
     Set the IP address of the server/message broker (`const char ip_address[] = `)
 
-4. Start the server
+4. Start the server with `node server` on the server/message broker
 
 5. Power on the ESP8266-enabled device
 
